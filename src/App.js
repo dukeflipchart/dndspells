@@ -28,7 +28,6 @@ const Board = styled.div`
 `;
 
 function Spell(props) {
-    console.log(props.casters);
     return <div className={props.className}></div>;
 }
 
