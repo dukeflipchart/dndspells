@@ -3,7 +3,8 @@ import styled from 'styled-components';
 
 var color = {
     bard: 'red',
-    wizard: 'purple'
+    wizard: 'purple',
+    cleric: 'blue'
 }
 
 function Gradientize(casters) {
@@ -23,8 +24,9 @@ function Gradientize(casters) {
 const Board = styled.div`
     display: grid;
     grid-template-columns: repeat(20, 1fr);
-    grid-column-gap: 1em;
-    margin: 1em;
+    grid-column-gap: 0.5vw;
+    grid-row-gap: 0.5vw;
+    margin: 0.5vw;
 `;
 
 function Spell(props) {
@@ -35,14 +37,16 @@ const StyledSpell = styled(Spell)`
     width: 100%;
     padding-top: 100%;
     border-radius: 50%;
-    ${Gradientize(props => props.casters)}
+    ${props => Gradientize(props.casters)}
+    ${props => props.coordinates ? 'grid-column-start: ' + props.coordinates[0] + ';' : ''}
+    ${props => props.coordinates ? 'grid-row-start: ' + props.coordinates[1] + ';' : ''}
 `;
 
 function App() {
     return (
         <Board>
             <StyledSpell casters={['bard']} />
-            <StyledSpell casters={['bard', 'wizard']} />
+            <StyledSpell casters={['bard', 'wizard', 'cleric']} coordinates={[19, 2]} />
             <StyledSpell casters={['wizard']} />
         </Board>
     );
