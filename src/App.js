@@ -30,7 +30,9 @@ const Board = styled.div`
 `;
 
 function Spell(props) {
-    return <div className={props.className}></div>;
+    return (
+        <div className={props.className}></div>
+    );
 }
 
 const StyledSpell = styled(Spell)`
@@ -40,6 +42,7 @@ const StyledSpell = styled(Spell)`
     ${props => Gradientize(props.casters)}
     ${props => props.coordinates ? 'grid-column-start: ' + props.coordinates[0] + ';' : ''}
     ${props => props.coordinates ? 'grid-row-start: ' + props.coordinates[1] + ';' : ''}
+    box-shadow: 0 0 2vw 0 #000; 
 `;
 
 function App() {
