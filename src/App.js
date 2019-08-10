@@ -46,7 +46,7 @@ function Gradientize(casters) {
 
 const Board = styled.div`
     display: grid;
-    grid-template-columns: repeat(30, 1fr);
+    grid-template-columns: repeat(19, 1fr);
     grid-column-gap: 0.75vw;
     grid-row-gap: 0.75vw;
     margin: 0.75vw;
