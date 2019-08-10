@@ -42,17 +42,47 @@ const StyledSpell = styled(Spell)`
     ${props => Gradientize(props.casters)}
     ${props => props.coordinates ? 'grid-column-start: ' + props.coordinates[0] + ';' : ''}
     ${props => props.coordinates ? 'grid-row-start: ' + props.coordinates[1] + ';' : ''}
-    box-shadow: 0 0 2vw 0 #000; 
+    box-shadow: 0 0 2vw 0 #000;
 `;
 
-function App() {
-    return (
-        <Board>
-            <StyledSpell casters={['bard']} />
-            <StyledSpell casters={['bard', 'wizard', 'cleric']} coordinates={[19, 2]} />
-            <StyledSpell casters={['wizard']} />
-        </Board>
-    );
+class App extends React.Component {
+
+    state = {
+        spells: [
+            {
+                'casters': ['bard', 'wizard', 'cleric'],
+                'coordinates': [3, 1]
+            },
+            {
+                'casters': ['bard', 'wizard'],
+                'coordinates': [5, 1]
+            },
+            {
+                'casters': ['wizard', 'cleric'],
+                'coordinates': [9, 1]
+            },
+            {
+                'casters': ['bard', 'wizard', 'cleric'],
+                'coordinates': [18, 2]
+            },
+            {
+                'casters': ['bard', 'wizard', 'cleric'],
+                'coordinates': [3, 3]
+            }
+        ]
+    };
+
+    renderSpells() {
+        return this.state.spells.map((spell) => <StyledSpell casters={spell.casters} coordinates={spell.coordinates} />);
+    }
+
+    render() {
+        return (
+            <Board>
+                {this.renderSpells()}
+            </Board>
+        );
+    }
 }
 
 export default App;
