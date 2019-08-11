@@ -42,6 +42,8 @@ for (var currentKey in Spells) {
     //console.log(Spells[currentKey]);
 }*/
 
+// end json import
+
 function Gradientize(casters) {
     let gradient = 'background: conic-gradient(';
     let position = 0;
