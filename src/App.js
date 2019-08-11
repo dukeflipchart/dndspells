@@ -15,20 +15,19 @@ const color = {
 
 const casterTypes = ['Bard', 'Ranger', 'Druid', 'Cleric', 'Paladin', 'Warlock', 'Sorcerer', 'Wizard'];
 
-var coordX = 1;
-var coordY = 1;
+//var coordX = 1;
+//var coordY = 1;
 
 for (var currentKey in Spells) {
 
     Spells[currentKey]['id'] = currentKey;
     Spells[currentKey]['casters'] = [];
     Spells[currentKey]['additionalCasters'] = [];
-    Spells[currentKey]['selected'] = false;
-    Spells[currentKey]['coordinates'] = [coordX, coordY];
+    /*Spells[currentKey]['coordinates'] = [coordX, coordY];
     if (++coordX > 19) {
         coordX = 1;
         coordY++;
-    }
+    }*/
 
     for (var casterType of casterTypes) {
         if (Spells[currentKey]['caster' + casterType] === casterType) {
@@ -37,8 +36,6 @@ for (var currentKey in Spells) {
             Spells[currentKey]['additionalCasters'].push(casterType.toLowerCase());
         }
     }
-
-    if (currentKey == 0) { Spells[currentKey]['selected'] = true; }
 
     console.log(Spells[currentKey]);
 }
@@ -102,9 +99,9 @@ function Spell(props) {
     }
 
     return (
-        <div className={props.className}>
+        <div className={props.className} onClick={() => props.onClick()}>
             {renderAdditionalCasters(props)}
-            <SpellLevel>{props.level}</SpellLevel>
+            <SpellLevel>{props.id}</SpellLevel>
         </div>
     );
 }
@@ -140,17 +137,27 @@ const SpellLevel = styled.div`
 class App extends React.Component {
 
     state = {
+        'selected': false,
     };
+
+    handleClick(id) {
+        this.setState({'selected': id});
+        console.log('selected: '+id);
+    }
 
     renderSpells() {
         var spellList = [];
         for (var currentKey in Spells) {
-            //console.log(Spells[currentKey]['additionalCasters']);
+            var isSpellSelected = (this.state.selected === currentKey) ? true : false;
+            //console.log(Spells[currentKey]['id']);
             spellList.push(<StyledSpell
+                id={Spells[currentKey]['id']}
                 casters={Spells[currentKey]['casters']}
                 additionalCasters={Spells[currentKey]['additionalCasters']}
                 level={Spells[currentKey]['level']}
-                selected={Spells[currentKey]['selected']}
+                selected={isSpellSelected}
+                coordinates={Spells[currentKey]['coordinates']}
+                onClick={() => alert(Spells[currentKey]['id'])}
             />);
         }
 

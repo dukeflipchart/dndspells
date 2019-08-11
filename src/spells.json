@@ -1,5 +1,6 @@
 {
   "0": {
+    "coordinates": ["1", "4"],
     "name": "Acid Splash",
     "level": 0,
     "source": "PHB",
@@ -14,6 +15,7 @@
     "casterWizard": "Wizard"
   },
   "1": {
+    "coordinates": ["1", "5"],
     "name": "Blade Ward",
     "level": 0,
     "source": "PHB",
@@ -28,6 +30,7 @@
     "casterWizard": "Wizard"
   },
   "2": {
+    "coordinates": ["2", "5"],
     "name": "Chill Touch",
     "level": 0,
     "source": "PHB",
@@ -42,6 +45,7 @@
     "casterWizard": "Wizard"
   },
   "3": {
+    "coordinates": ["1", "1"],
     "name": "Dancing Lights",
     "level": 0,
     "source": "PHB",
@@ -56,6 +60,7 @@
     "casterWizard": "Wizard"
   },
   "4": {
+    "coordinates": ["19", "16"],
     "name": "Druidcraft",
     "level": 0,
     "source": "PHB",
@@ -70,6 +75,7 @@
     "casterWizard": null
   },
   "5": {
+    "coordinates": ["1", "12"],
     "name": "Eldritch Blast",
     "level": 0,
     "source": "PHB",
