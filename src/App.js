@@ -13,7 +13,7 @@ const color = {
     wizard: '#4C88FF'
 }
 
-const casterTypes = ['Bard', 'Cleric', 'Druid', 'Paladin', 'Ranger', 'Sorcerer', 'Warlock', 'Wizard'];
+const casterTypes = ['Bard', 'Ranger', 'Druid', 'Cleric', 'Paladin', 'Warlock', 'Sorcerer', 'Wizard'];
 
 var coordX = 1;
 var coordY = 1;
