@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+//import Tooltip from "react-simple-tooltip";
 import Spells from './spells';
 
 const color = {
@@ -82,6 +83,7 @@ const StyledAdditionalCaster = styled(AdditionalCaster)`
     width: 1vw;
     height: 1vw;
     border-radius: 50%;
+    box-shadow: 0 0 0 3px #222;
     background-color: ${props => color[props.caster]};
 
     :first-of-type {
@@ -115,7 +117,7 @@ function Spell(props) {
     return (
         <div className={props.className} onClick={() => props.onClick()}>
             {renderAdditionalCasters(props)}
-            <SpellLevel>{props.selected ? 'SEL' : '' }</SpellLevel>
+            <SpellLevel></SpellLevel>
         </div>
     );
 }
@@ -124,20 +126,19 @@ const StyledSpell = styled(Spell)`
     width: 100%;
     padding-top: 100%;
     border-radius: 50%;
+    cursor: pointer;
+    position: relative;
     ${props => Gradientize(props.casters)}
     ${props => props.coordinates ? 'grid-column-start: ' + props.coordinates[0] + ';' : ''}
     ${props => props.coordinates ? 'grid-row-start: ' + props.coordinates[1] + ';' : ''}
-    position: relative;
-    box-shadow:
-        0 0 1vw 0 #000
-        ${props => props.selected ? ', 0 0 0 3px #fff' : ''}
-        ${props => props.highlighted ? ', 0 0 1vw 3px ' + color[props.casters[0]] : ''};
+    ${props => props.highlight ? 'box-shadow: 0 0 0 3px #222, 0 0 0 6px ' + color[props.highlight] : ';'}
+    ${props => props.selected ? 'box-shadow: 0 0 0 3px #fff' : ';'}
     ${props => props.selected ? 'z-index: 2;' : ''}
-    cursor: pointer;
-    ${props => props.highlighted ? 'background-color: black !important;' : ''}
+    ${props => (props.hasOpacity || props.highlight || props.selected) ? '' : 'opacity: 0.5;'}
 
     :hover {
         ${props => props.selected ? 'box-shadow: 0 0 0 3px #fff;' : 'box-shadow: 0 0 0 3px rgba(255,255,255,0.5);'}
+        opacity: 1;
         z-index: 2;
     }
 `;
@@ -163,6 +164,11 @@ function SaveButton(props) {
     return <button onClick={() => props.onClick()}>Save</button>;
 }
 
+function HighlightButton(props) {
+
+    return <button onClick={() => props.onClick()}>{props.label}</button>;
+}
+
 class App extends React.Component {
 
     constructor(props) {
@@ -171,7 +177,7 @@ class App extends React.Component {
         this.state = {
             'spells': [],
             'selectedId': false,
-            'highlightedIds': ['0', '1', '2', '3', '4', '5'],
+            'highlightedClass': false,
             'timeSinceLastSave': 0
         };
 
@@ -218,23 +224,6 @@ class App extends React.Component {
         link.click();
     }
 
-    renderSpell(i) {
-        //console.log(this.state.highlightedIds);
-        //console.log(this.state.highlightedIds.includes(this.state.spells[i]['id']) ? ' contains ' : 'does not contain ')
-        //console.log(this.state.spells[i]['id']);
-
-        return (<StyledSpell
-            id={this.state.spells[i]['id']}
-            casters={this.state.spells[i]['casters']}
-            additionalCasters={this.state.spells[i]['additionalCasters']}
-            level={this.state.spells[i]['level']}
-            selected={this.state.selectedId === i ? true : false}
-            highlighted={this.state.highlightedIds.includes(this.state.spells[i]['id']) ? true : false}
-            coordinates={this.state.spells[i]['coordinates']}
-            onClick={() => this.handleClick(i)}
-        />);
-    }
-
     handleClick(i) {
         if (this.state.selectedId === i) {
             this.setState({'selectedId': false});
@@ -249,6 +238,33 @@ class App extends React.Component {
             this.setState({'selectedId': i});
             console.log('selected: ' + i);
         }
+    }
+
+    handleHighlightClick(caster) {
+        var newHighlightedClass = (this.state.highlightedClass === caster) ? false : caster;
+        this.setState({highlightedClass: newHighlightedClass});
+    }
+
+    renderSpell(i) {
+        //console.log(this.state.highlightedIds);
+        //console.log(this.state.highlightedIds.includes(this.state.spells[i]['id']) ? ' contains ' : 'does not contain ')
+        //console.log(this.state.spells[i]['id']);
+
+        return (
+            //<Tooltip content={this.state.spells[i]['name'] + '<br/>Level ' + this.state.spells[i]['level'] }>
+                <StyledSpell
+                    id={this.state.spells[i]['id']}
+                    casters={this.state.spells[i]['casters']}
+                    additionalCasters={this.state.spells[i]['additionalCasters']}
+                    level={this.state.spells[i]['level']}
+                    selected={this.state.selectedId === i ? true : false}
+                    hasOpacity={!this.state.highlightedClass}
+                    highlight={this.state.spells[i]['casters'].includes(this.state.highlightedClass) ? this.state.highlightedClass : false}
+                    coordinates={this.state.spells[i]['coordinates']}
+                    onClick={() => this.handleClick(i)}
+                />
+            //</Tooltip>
+        );
     }
 
     renderSpells() {
@@ -269,6 +285,14 @@ class App extends React.Component {
                     {this.renderSpells()}
                 </Board>
                 <SaveButton onClick={() => this.handleSave(this.state.spells)} />
+                <HighlightButton onClick={() => this.handleHighlightClick('bard')} label='Highlight Bard' />
+                <HighlightButton onClick={() => this.handleHighlightClick('cleric')} label='Highlight Cleric' />
+                <HighlightButton onClick={() => this.handleHighlightClick('druid')} label='Highlight Druid' />
+                <HighlightButton onClick={() => this.handleHighlightClick('paladin')} label='Highlight Paladin' />
+                <HighlightButton onClick={() => this.handleHighlightClick('ranger')} label='Highlight Ranger' />
+                <HighlightButton onClick={() => this.handleHighlightClick('sorcerer')} label='Highlight Sorcerer' />
+                <HighlightButton onClick={() => this.handleHighlightClick('warlock')} label='Highlight Warlock' />
+                <HighlightButton onClick={() => this.handleHighlightClick('wizard')} label='Highlight Wizard' />
             </>
         );
     }
