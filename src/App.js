@@ -37,7 +37,7 @@ for (var currentKey in Spells) {
         }
     }
 
-    console.log(Spells[currentKey]);
+    //console.log(Spells[currentKey]);
 }
 
 function Gradientize(casters) {
@@ -119,7 +119,7 @@ const StyledSpell = styled(Spell)`
     cursor: pointer;
 
     :hover {
-        box-shadow: 0 0 0 3px rgba(255,255,255,0.5);
+        ${props => props.selected ? 'box-shadow: 0 0 0 3px #fff;' : 'box-shadow: 0 0 0 3px rgba(255,255,255,0.5);'}
         z-index: 2;
     }
 `;
@@ -136,32 +136,55 @@ const SpellLevel = styled.div`
 
 class App extends React.Component {
 
-    state = {
-        'selected': false,
-    };
+    constructor(props) {
+        super(props);
 
-    handleClick(id) {
-        this.setState({'selected': id});
-        console.log('selected: '+id);
+        this.state = {
+            'spells': [],
+            'selectedId': false
+        };
+
+        for (var currentKey in Spells) {
+            this.state.spells[currentKey] = Spells[currentKey];
+            //console.log(this.state.spells[currentKey]);
+        }
+
+        this.state.selectedId = false;
+    }
+
+    renderSpell(spellId) {
+        //console.log(this.state.spells[spellId]['name']);
+
+        return (<StyledSpell
+            id={spellId}
+            casters={this.state.spells[spellId]['casters']}
+            additionalCasters={this.state.spells[spellId]['additionalCasters']}
+            level={this.state.spells[spellId]['level']}
+            selected={this.state.selectedId === spellId ? true : false}
+            coordinates={this.state.spells[spellId]['coordinates']}
+            onClick={() => this.handleClick(spellId)}
+        />);
+    }
+
+    handleClick(spellId) {
+        if (this.state.selectedId === spellId) {
+            this.setState({'selectedId': false});
+            console.log('unselected: '+spellId);
+        } else {
+            this.setState({'selectedId': spellId});
+            console.log('selected: '+spellId);
+        }
     }
 
     renderSpells() {
-        var spellList = [];
-        for (var currentKey in Spells) {
-            var isSpellSelected = (this.state.selected === currentKey) ? true : false;
-            //console.log(Spells[currentKey]['id']);
-            spellList.push(<StyledSpell
-                id={Spells[currentKey]['id']}
-                casters={Spells[currentKey]['casters']}
-                additionalCasters={Spells[currentKey]['additionalCasters']}
-                level={Spells[currentKey]['level']}
-                selected={isSpellSelected}
-                coordinates={Spells[currentKey]['coordinates']}
-                onClick={() => alert(Spells[currentKey]['id'])}
-            />);
+        var spells = [];
+
+        for (var currentSpellId in this.state.spells) {
+            spells.push(this.renderSpell(currentSpellId));
+            //console.log(currentSpellId);
         }
 
-        return spellList;
+        return spells;
     }
 
     render() {
