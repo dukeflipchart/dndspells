@@ -106,15 +106,16 @@ function Spell(props) {
         if (props.additionalCasters) {
 
             return props.additionalCasters.map(additionalCaster => <StyledAdditionalCaster caster={additionalCaster}/>);
-        }
+        } else {
 
-        else return '';
+            return '';
+        }
     }
 
     return (
         <div className={props.className} onClick={() => props.onClick()}>
             {renderAdditionalCasters(props)}
-            <SpellLevel></SpellLevel>
+            <SpellLevel>{props.selected ? 'SEL' : '' }</SpellLevel>
         </div>
     );
 }
@@ -127,9 +128,13 @@ const StyledSpell = styled(Spell)`
     ${props => props.coordinates ? 'grid-column-start: ' + props.coordinates[0] + ';' : ''}
     ${props => props.coordinates ? 'grid-row-start: ' + props.coordinates[1] + ';' : ''}
     position: relative;
-    ${props => props.selected ? 'box-shadow: 0 0 0 3px #fff;' : 'box-shadow: 0 0 1vw 0 #000;'}
+    box-shadow:
+        0 0 1vw 0 #000
+        ${props => props.selected ? ', 0 0 0 3px #fff' : ''}
+        ${props => props.highlighted ? ', 0 0 1vw 3px ' + color[props.casters[0]] : ''};
     ${props => props.selected ? 'z-index: 2;' : ''}
     cursor: pointer;
+    ${props => props.highlighted ? 'background-color: black !important;' : ''}
 
     :hover {
         ${props => props.selected ? 'box-shadow: 0 0 0 3px #fff;' : 'box-shadow: 0 0 0 3px rgba(255,255,255,0.5);'}
@@ -166,6 +171,7 @@ class App extends React.Component {
         this.state = {
             'spells': [],
             'selectedId': false,
+            'highlightedIds': ['0', '1', '2', '3', '4', '5'],
             'timeSinceLastSave': 0
         };
 
@@ -213,7 +219,9 @@ class App extends React.Component {
     }
 
     renderSpell(i) {
-        //console.log(this.state.spells[spellId]['name']);
+        //console.log(this.state.highlightedIds);
+        //console.log(this.state.highlightedIds.includes(this.state.spells[i]['id']) ? ' contains ' : 'does not contain ')
+        //console.log(this.state.spells[i]['id']);
 
         return (<StyledSpell
             id={this.state.spells[i]['id']}
@@ -221,6 +229,7 @@ class App extends React.Component {
             additionalCasters={this.state.spells[i]['additionalCasters']}
             level={this.state.spells[i]['level']}
             selected={this.state.selectedId === i ? true : false}
+            highlighted={this.state.highlightedIds.includes(this.state.spells[i]['id']) ? true : false}
             coordinates={this.state.spells[i]['coordinates']}
             onClick={() => this.handleClick(i)}
         />);
@@ -245,9 +254,9 @@ class App extends React.Component {
     renderSpells() {
         var spells = [];
 
-        for (var currentSpellId in this.state.spells) {
-            spells.push(this.renderSpell(currentSpellId));
-            //console.log(currentSpellId);
+        for (var i in this.state.spells) {
+            spells.push(this.renderSpell(i));
+            //console.log(i);
         }
 
         return spells;
