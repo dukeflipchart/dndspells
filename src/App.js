@@ -13,21 +13,23 @@ const color = {
     wizard: '#4C88FF'
 }
 
+// start json import
+
 const casterTypes = ['Bard', 'Ranger', 'Druid', 'Cleric', 'Paladin', 'Warlock', 'Sorcerer', 'Wizard'];
 
-//var coordX = 1;
-//var coordY = 1;
+var coordX = 1;
+var coordY = 1;
 
 for (var currentKey in Spells) {
 
     Spells[currentKey]['id'] = currentKey;
     Spells[currentKey]['casters'] = [];
     Spells[currentKey]['additionalCasters'] = [];
-    /*Spells[currentKey]['coordinates'] = [coordX, coordY];
+    Spells[currentKey]['coordinates'] = [coordX, coordY];
     if (++coordX > 19) {
         coordX = 1;
         coordY++;
-    }*/
+    }
 
     for (var casterType of casterTypes) {
         if (Spells[currentKey]['caster' + casterType] === casterType) {
@@ -39,6 +41,8 @@ for (var currentKey in Spells) {
 
     //console.log(Spells[currentKey]);
 }
+
+// end json import
 
 function Gradientize(casters) {
     let gradient = 'background: conic-gradient(';
@@ -134,6 +138,10 @@ const SpellLevel = styled.div`
     text-align: center;
 `;
 
+function SaveButton(props) {
+
+}
+
 class App extends React.Component {
 
     constructor(props) {
@@ -170,6 +178,12 @@ class App extends React.Component {
         if (this.state.selectedId === spellId) {
             this.setState({'selectedId': false});
             console.log('unselected: '+spellId);
+        } else if (this.state.selectedId) {
+            console.log('switching position of ' + this.state.selectedId + ' and ' + spellId);
+            var newCoords = this.state.spells[spellId]['coordinates'];
+            this.state.spells[spellId]['coordinates'] = this.state.spells[this.state.selectedId]['coordinates'];
+            this.state.spells[this.state.selectedId]['coordinates'] = newCoords;
+            this.setState({'selectedId': false});
         } else {
             this.setState({'selectedId': spellId});
             console.log('selected: '+spellId);
