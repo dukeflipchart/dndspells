@@ -15,11 +15,21 @@ const color = {
 
 const casterTypes = ['Bard', 'Cleric', 'Druid', 'Paladin', 'Ranger', 'Sorcerer', 'Warlock', 'Wizard'];
 
+var coordX = 1;
+var coordY = 1;
+
 for (var currentKey in Spells) {
-    console.log(Spells[currentKey]);
+
     Spells[currentKey]['id'] = currentKey;
     Spells[currentKey]['casters'] = [];
     Spells[currentKey]['additionalCasters'] = [];
+    Spells[currentKey]['selected'] = false;
+    Spells[currentKey]['coordinates'] = [coordX, coordY];
+    if (++coordX > 19) {
+        coordX = 1;
+        coordY++;
+    }
+
     for (var casterType of casterTypes) {
         if (Spells[currentKey]['caster' + casterType] === casterType) {
             Spells[currentKey]['casters'].push(casterType.toLowerCase());
@@ -27,9 +37,11 @@ for (var currentKey in Spells) {
             Spells[currentKey]['additionalCasters'].push(casterType.toLowerCase());
         }
     }
-}
 
-console.log(Spells);
+    if (currentKey == 0) { Spells[currentKey]['selected'] = true; }
+
+    console.log(Spells[currentKey]);
+}
 
 function Gradientize(casters) {
     let gradient = 'background: conic-gradient(';
@@ -104,8 +116,15 @@ const StyledSpell = styled(Spell)`
     ${props => Gradientize(props.casters)}
     ${props => props.coordinates ? 'grid-column-start: ' + props.coordinates[0] + ';' : ''}
     ${props => props.coordinates ? 'grid-row-start: ' + props.coordinates[1] + ';' : ''}
-    box-shadow: 0 0 2vw 0 #000;
     position: relative;
+    ${props => props.selected ? 'box-shadow: 0 0 0 3px #fff;' : 'box-shadow: 0 0 1vw 0 #000;'}
+    ${props => props.selected ? 'z-index: 2;' : ''}
+    cursor: pointer;
+
+    :hover {
+        box-shadow: 0 0 0 3px rgba(255,255,255,0.5);
+        z-index: 2;
+    }
 `;
 
 const SpellLevel = styled.div`
@@ -131,6 +150,7 @@ class App extends React.Component {
                 casters={Spells[currentKey]['casters']}
                 additionalCasters={Spells[currentKey]['additionalCasters']}
                 level={Spells[currentKey]['level']}
+                selected={Spells[currentKey]['selected']}
             />);
         }
 
