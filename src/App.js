@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-//import Tooltip from "react-simple-tooltip";
 import Spells from './spells';
 
 const color = {
@@ -45,7 +44,7 @@ for (var currentKey in Spells) {
 
 // end json import
 
-function Gradientize(casters) {
+function gradientize(casters) {
     let gradient = 'background: conic-gradient(';
     let position = 0;
     let step = 100/casters.length;
@@ -102,6 +101,81 @@ const StyledAdditionalCaster = styled(AdditionalCaster)`
     }
 `;
 
+const CasterLabel = styled.span`
+    color: ${props => color[props.caster]};
+    text-transform: capitalize;
+
+    :not(:last-of-type) {
+        :after {
+            content: ', ';
+        }
+    }
+`;
+
+class SpellTooltip extends React.Component {
+
+    renderCasterLabels(casters) {
+
+        return casters.map(caster => <CasterLabel caster={caster}>{caster}</CasterLabel>);
+    }
+
+    render() {
+
+        return(
+            <div className={this.props.className}>
+                <h3>{this.props.name}</h3>
+                <h4>{this.props.level ? 'LEVEL' + this.props.level : 'CANTRIP'}</h4>
+                <p>{this.renderCasterLabels(this.props.casters)}{this.props.additionalCasters.length > 0 ? ' and subclasses of ' : ''}{this.renderCasterLabels(this.props.additionalCasters)}</p>
+            </div>
+        );
+    }
+}
+
+const StyledSpellTooltip = styled(SpellTooltip)`
+    opacity: 0;
+    visibility: hidden;
+    display: block;
+    position: absolute;
+    min-width: 10em;
+    top: 110%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background-color: #111;
+    color: #aaa;
+    font-size: 0.75em;
+    line-height: 1.3;
+    padding: 0.75em;
+    transition: opacity 0.15s, transform 0.15s;
+    box-shadow: 0 0 1em 0 rgba(0,0,0,0.25);
+
+    :before {
+        content: '';
+        position: absolute;
+        left: calc(50% - 5px);
+        top: -5px;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 5px 5px 5px;
+        border-color: transparent transparent #111 transparent;
+    }
+
+    h3, h4, p {
+        margin: 0;
+    }
+
+    h3 {
+        color: #fff;
+        white-space: nowrap;
+    }
+
+    h4 {
+        border-bottom: 1px solid #333;
+        padding-bottom: 0.5em;
+        margin-bottom: 0.25em;
+    }
+`;
+
 function Spell(props) {
 
     function renderAdditionalCasters(props) {
@@ -118,6 +192,7 @@ function Spell(props) {
         <div className={props.className} onClick={() => props.onClick()}>
             {renderAdditionalCasters(props)}
             <SpellLevel></SpellLevel>
+            <StyledSpellTooltip name={props.name} level={props.level} casters={props.casters} additionalCasters={props.additionalCasters} />
         </div>
     );
 }
@@ -128,7 +203,7 @@ const StyledSpell = styled(Spell)`
     border-radius: 50%;
     cursor: pointer;
     position: relative;
-    ${props => Gradientize(props.casters)}
+    ${props => gradientize(props.casters)}
     ${props => props.coordinates ? 'grid-column-start: ' + props.coordinates[0] + ';' : ''}
     ${props => props.coordinates ? 'grid-row-start: ' + props.coordinates[1] + ';' : ''}
     ${props => props.highlight ? 'box-shadow: 0 0 0 3px #222, 0 0 0 6px ' + color[props.highlight] : ';'}
@@ -140,6 +215,12 @@ const StyledSpell = styled(Spell)`
         ${props => props.selected ? 'box-shadow: 0 0 0 3px #fff;' : 'box-shadow: 0 0 0 3px rgba(255,255,255,0.5);'}
         opacity: 1;
         z-index: 2;
+
+        ${StyledSpellTooltip} {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
     }
 `;
 
@@ -254,19 +335,18 @@ class App extends React.Component {
         //console.log(this.state.spells[i]['id']);
 
         return (
-            //<Tooltip content={this.state.spells[i]['name'] + '<br/>Level ' + this.state.spells[i]['level'] }>
-                <StyledSpell
-                    id={this.state.spells[i]['id']}
-                    casters={this.state.spells[i]['casters']}
-                    additionalCasters={this.state.spells[i]['additionalCasters']}
-                    level={this.state.spells[i]['level']}
-                    selected={this.state.selectedId === i ? true : false}
-                    hasOpacity={!this.state.highlightedClass}
-                    highlight={this.state.spells[i]['casters'].includes(this.state.highlightedClass) ? this.state.highlightedClass : false}
-                    coordinates={this.state.spells[i]['coordinates']}
-                    onClick={() => this.handleClick(i)}
-                />
-            //</Tooltip>
+            <StyledSpell
+                id={this.state.spells[i]['id']}
+                name={this.state.spells[i].name}
+                casters={this.state.spells[i]['casters']}
+                additionalCasters={this.state.spells[i]['additionalCasters']}
+                level={this.state.spells[i]['level']}
+                selected={this.state.selectedId === i ? true : false}
+                hasOpacity={!this.state.highlightedClass}
+                highlight={this.state.spells[i]['casters'].includes(this.state.highlightedClass) ? this.state.highlightedClass : false}
+                coordinates={this.state.spells[i]['coordinates']}
+                onClick={() => this.handleClick(i)}
+            />
         );
     }
 
