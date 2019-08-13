@@ -178,6 +178,7 @@ class App extends React.Component {
             'spells': [],
             'selectedId': false,
             'highlightedClass': false,
+            'autosaving': false,
             'timeSinceLastSave': 0
         };
 
@@ -202,15 +203,17 @@ class App extends React.Component {
     }
 
     tick() {
-        this.setState({
-            'timeSinceLastSave': this.state['timeSinceLastSave'] + 1000
-        });
-        if (this.state['timeSinceLastSave'] > 300000) {
-            this.handleSave(this.state.spells);
+        if (this.state.autosaving) {
             this.setState({
-                'timeSinceLastSave': 0
+                'timeSinceLastSave': this.state['timeSinceLastSave'] + 1000
             });
-            console.log('Saved');
+            if (this.state['timeSinceLastSave'] > 300000) {
+                this.handleSave(this.state.spells);
+                this.setState({
+                    'timeSinceLastSave': 0
+                });
+                console.log('Saved');
+            }
         }
     }
 
@@ -293,6 +296,7 @@ class App extends React.Component {
                 <HighlightButton onClick={() => this.handleHighlightClick('sorcerer')} label='Highlight Sorcerer' />
                 <HighlightButton onClick={() => this.handleHighlightClick('warlock')} label='Highlight Warlock' />
                 <HighlightButton onClick={() => this.handleHighlightClick('wizard')} label='Highlight Wizard' />
+                <p>{this.state.autosaving ? 'Autosave is on' : 'Autosave is OFF!!'}</p>
             </>
         );
     }
