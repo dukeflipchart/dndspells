@@ -45,7 +45,7 @@ for (var currentKey in Spells) {
 // end json import
 
 function gradientize(casters) {
-    let gradient = 'background: conic-gradient(';
+    let gradient = 'conic-gradient(';
     let position = 0;
     let step = 100/casters.length;
     for (let caster of casters) {
@@ -54,7 +54,7 @@ function gradientize(casters) {
         }
         gradient += color[caster] + ' ' + position + '% ' + (position += step) + '%';
     }
-    gradient += ');';
+    gradient += ')';
     return gradient;
 }
 
@@ -176,36 +176,33 @@ const StyledSpellTooltip = styled(SpellTooltip)`
     }
 `;
 
+const renderAdditionalCasters = additionalCasters => additionalCasters ?
+    additionalCasters.map(additionalCaster => <StyledAdditionalCaster caster={additionalCaster}/>) :
+    '';
+
 function Spell(props) {
-
-    function renderAdditionalCasters(props) {
-        if (props.additionalCasters) {
-
-            return props.additionalCasters.map(additionalCaster => <StyledAdditionalCaster caster={additionalCaster}/>);
-        } else {
-
-            return '';
-        }
-    }
-
     return (
-        <div className={props.className} onClick={() => props.onClick()}>
-            {renderAdditionalCasters(props)}
+        <StyledSpell {...props} className={props.className} onClick={() => props.onClick()}>
+            {renderAdditionalCasters(props.additionalCasters)}
             <SpellLevel></SpellLevel>
             <StyledSpellTooltip name={props.name} level={props.level} casters={props.casters} additionalCasters={props.additionalCasters} />
-        </div>
+        </StyledSpell>
     );
 }
 
-const StyledSpell = styled(Spell)`
+const StyledSpell = styled.div.attrs({
+    style: props => ({
+        background: gradientize(props.casters),
+        gridColumnStart: props.coordinates[0],
+        gridRowStart: props.coordinates[1]
+    })
+})`
     width: 100%;
     padding-top: 100%;
     border-radius: 50%;
     cursor: pointer;
     position: relative;
-    ${props => gradientize(props.casters)}
-    ${props => props.coordinates ? 'grid-column-start: ' + props.coordinates[0] + ';' : ''}
-    ${props => props.coordinates ? 'grid-row-start: ' + props.coordinates[1] + ';' : ''}
+
     ${props => props.highlight ? 'box-shadow: 0 0 0 3px #222, 0 0 0 6px ' + color[props.highlight] : ';'}
     ${props => props.selected ? 'box-shadow: 0 0 0 3px #fff' : ';'}
     ${props => props.selected ? 'z-index: 2;' : ''}
