@@ -145,8 +145,10 @@ const StyledSpellTooltip = styled(SpellTooltip)`
     font-size: 0.75em;
     line-height: 1.3;
     padding: 0.75em;
-    transition: opacity 0.15s, transform 0.15s;
+    border-radius: 1em;
+    transition: box-shadow 0.15s, opacity 0.15s, transform 0.15s;
     box-shadow: 0 0 1em 0 rgba(0,0,0,0.25);
+    z-index: 2;
 
     :before {
         content: '';
@@ -211,7 +213,6 @@ const StyledSpell = styled.div.attrs({
     :hover {
         ${props => props.selected ? 'box-shadow: 0 0 0 3px #fff;' : 'box-shadow: 0 0 0 3px rgba(255,255,255,0.5);'}
         opacity: 1;
-        z-index: 2;
 
         ${StyledSpellTooltip} {
             opacity: 1;
@@ -245,6 +246,17 @@ function SaveButton(props) {
 function HighlightButton(props) {
 
     return <button onClick={() => props.onClick()}>{props.label}</button>;
+}
+
+function swap(spells, i1, i2) {
+
+    return spells.map((spell, index) => {
+        switch (index) {
+            case i1: return {...spell, coordinates: spells[i2].coordinates};
+            case i2: return {...spell, coordinates: spells[i1].coordinates};
+            default: return spell;
+        }
+    });
 }
 
 class App extends React.Component {
@@ -311,10 +323,11 @@ class App extends React.Component {
             console.log('unselected: '+i);
         } else if (this.state.selectedId) {
             console.log('switching position of ' + this.state.selectedId + ' and ' + i);
-            var newCoords = this.state.spells[i]['coordinates'];
-            this.state.spells[i]['coordinates'] = this.state.spells[this.state.selectedId]['coordinates'];
-            this.state.spells[this.state.selectedId]['coordinates'] = newCoords;
-            this.setState({'selectedId': false});
+            const { spells, selectedId } = this.state;
+            this.setState({
+                spells: swap(spells, Number(i), Number(selectedId)),
+                selectedId: false
+            });
         } else {
             this.setState({'selectedId': i});
             console.log('selected: ' + i);
@@ -332,7 +345,7 @@ class App extends React.Component {
         //console.log(this.state.spells[i]['id']);
 
         return (
-            <StyledSpell
+            <Spell
                 id={this.state.spells[i]['id']}
                 name={this.state.spells[i].name}
                 casters={this.state.spells[i]['casters']}
