@@ -237,7 +237,7 @@ class App extends React.Component {
         this.state = {
             'spells': [],
             'selectedId': false,
-            'highlightedClasses': [],
+            'highlightedCasters': [],
             'editMode': false,
             'timeSinceLastSave': 0
         };
@@ -300,33 +300,39 @@ class App extends React.Component {
                     selectedId: false
                 });
             } else {
-                this.setState({'selectedId': i});
+                this.setState({selectedId: i});
                 console.log('selected: ' + i);
+            }
+        } else {
+            if (this.state.highlightedCasters === this.state.spells[i].casters) {
+                this.setState({highlightedCasters: []});
+            } else {
+                this.setState({highlightedCasters: this.state.spells[i].casters});
             }
         }
     }
 
     handleHighlightClick(caster) {
-        if (this.state.highlightedClasses.includes(caster)) {
+        if (this.state.highlightedCasters.includes(caster)) {
             /* if the caster was highlighted, we remove it from the highlighted classes */
             //console.log('removing highlight from ' + caster);
             this.setState({
-                highlightedClasses: this.state.highlightedClasses.filter(value =>  value !== caster)
+                highlightedCasters: this.state.highlightedCasters.filter(value =>  value !== caster)
             });
         } else {
             /* if the caster was not highlighted, we add it to highlighted classes */
             //console.log('highlighting ' + caster);
-            var newHighlightedClasses = this.state.highlightedClasses;
-            newHighlightedClasses.push(caster);
+            var newhighlightedCasters = this.state.highlightedCasters;
+            newhighlightedCasters.push(caster);
             this.setState({
-                highlightedClasses: newHighlightedClasses
+                highlightedCasters: newhighlightedCasters
             });
         }
     }
 
     getHighlightColors(casters) {
 
-        return casters.filter(value => this.state.highlightedClasses.includes(value));
+        return casters.filter(value => this.state.highlightedCasters.includes(value));
     }
 
     renderSpells() {
@@ -339,7 +345,7 @@ class App extends React.Component {
             additionalCasters={i.additionalCasters}
             level={i.level}
             selected={this.state.selectedId === i.id ? true : false}
-            hasOpacity={this.state.highlightedClasses.length === 0}
+            hasOpacity={this.state.highlightedCasters.length === 0}
             highlightColors={this.getHighlightColors(i.casters)}
             coordinates={i.coordinates}
             onClick={() => this.handleClick(i.id)}
