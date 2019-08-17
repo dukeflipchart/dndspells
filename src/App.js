@@ -28,18 +28,6 @@ function gradientize(casters) {
     return gradient;
 }
 
-const Board = styled.div`
-    display: grid;
-    grid-template-columns: repeat(19, 1fr);
-    grid-gap: 0.75vw;
-    margin: 0.75vw;
-    @media only screen and (min-width: 1280px) {
-        width: calc(1280px - 1.5 * 12.8px);
-        grid-gap: calc(0.75 * 12.8px);
-        margin: calc(0.75 * 12.8px) auto;
-    }
-`;
-
 function AdditionalCaster(props) {
 
     return (
@@ -119,6 +107,7 @@ const StyledSpellTooltip = styled(SpellTooltip)`
     transition: box-shadow 0.2s, opacity 0.2s, transform 0.2s;
     box-shadow: 0 0 1em 0 rgba(0,0,0,0.5);
     z-index: 2;
+    ${props => props.selected ? 'opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0);' : '' }
 
     :before {
         content: '';
@@ -138,13 +127,20 @@ const StyledSpellTooltip = styled(SpellTooltip)`
 
     h3 {
         color: #fff;
+        text-transform: uppercase;
         white-space: nowrap;
     }
 
     h4 {
         border-bottom: 1px solid #333;
         padding-bottom: 0.5em;
-        margin-bottom: 0.25em;
+        margin-bottom: 0.5em;
+    }
+
+    p {
+        font-family: 'Merriweather', serif;
+        line-height: 1.5;
+        text-align: left;
     }
 `;
 
@@ -158,7 +154,7 @@ function Spell(props) {
         <StyledSpell {...props} className={props.className} onClick={() => props.onClick()}>
             {renderAdditionalCasters(props.additionalCasters)}
             <SpellLevel></SpellLevel>
-            <StyledSpellTooltip name={props.name} level={props.level} casters={props.casters} additionalCasters={props.additionalCasters} />
+            <StyledSpellTooltip name={props.name} level={props.level} casters={props.casters} additionalCasters={props.additionalCasters} selected={props.selected} />
         </StyledSpell>
     );
 }
@@ -229,6 +225,43 @@ function swap(spells, i1, i2) {
     });
 }
 
+const Wrapper = styled.div`
+    font-size: 12px;
+`;
+
+const Header = styled.header`
+    padding: 1em;
+    text-transform: uppercase;
+    text-align: center;
+
+    ${CasterLabel} {
+        text-transform: uppercase;
+
+        :after {
+            content: 's';
+        }
+
+        :not(:last-of-type) {
+            :after {
+                content: 's, ';
+            }
+        }
+    }
+`;
+
+const Board = styled.div`
+    display: grid;
+    grid-template-columns: repeat(19, 1fr);
+    grid-gap: 0.75vw;
+    margin: 0.75vw;
+    @media only screen and (min-width: 1280px) {
+        width: calc(1280px - 1.5 * 12.8px);
+        grid-gap: calc(0.75 * 12.8px);
+    }
+`;
+
+const Aside = styled.aside``;
+
 class App extends React.Component {
 
     constructor(props) {
@@ -288,22 +321,21 @@ class App extends React.Component {
     }
 
     handleClick(i) {
-        if (this.state.editMode) {
-            if (this.state.selectedId === i) {
-                this.setState({'selectedId': false});
-                console.log('unselected: '+i);
-            } else if (this.state.selectedId) {
-                console.log('switching position of ' + this.state.selectedId + ' and ' + i);
-                const { spells, selectedId } = this.state;
-                this.setState({
-                    spells: swap(spells, Number(i), Number(selectedId)),
-                    selectedId: false
-                });
-            } else {
-                this.setState({selectedId: i});
-                console.log('selected: ' + i);
-            }
+        if (this.state.selectedId === i) {
+            this.setState({'selectedId': false});
+            //console.log('unselected: '+i);
+        } else if (this.state.selectedId && this.state.editMode) {
+            //console.log('switching position of ' + this.state.selectedId + ' and ' + i);
+            const { spells, selectedId } = this.state;
+            this.setState({
+                spells: swap(spells, Number(i), Number(selectedId)),
+                selectedId: false
+            });
         } else {
+            this.setState({selectedId: i});
+            //console.log('selected: ' + i);
+        }
+        if (!this.state.editMode) {
             if (this.state.highlightedCasters === this.state.spells[i].casters) {
                 this.setState({highlightedCasters: []});
             } else {
@@ -342,7 +374,7 @@ class App extends React.Component {
             id={i.id}
             name={i.name}
             casters={i.casters}
-            additionalCasters={i.additionalCasters}
+            additionalCasters={this.state.highlightedCasters.length === 0 ? i.additionalCasters : []}
             level={i.level}
             selected={this.state.selectedId === i.id ? true : false}
             hasOpacity={this.state.highlightedCasters.length === 0}
@@ -352,23 +384,47 @@ class App extends React.Component {
         />);
     }
 
+    renderButtons() {
+        if (this.state.editMode) {
+
+            return (
+                <>
+                    <p>EDIT MODE, AUTOSAVING</p>
+                    <SaveButton onClick={() => this.handleSave(this.state.spells)} />
+                    <HighlightButton onClick={() => this.handleHighlightClick('bard')} label='Highlight Bard' />
+                    <HighlightButton onClick={() => this.handleHighlightClick('cleric')} label='Highlight Cleric' />
+                    <HighlightButton onClick={() => this.handleHighlightClick('druid')} label='Highlight Druid' />
+                    <HighlightButton onClick={() => this.handleHighlightClick('paladin')} label='Highlight Paladin' />
+                    <HighlightButton onClick={() => this.handleHighlightClick('ranger')} label='Highlight Ranger' />
+                    <HighlightButton onClick={() => this.handleHighlightClick('sorcerer')} label='Highlight Sorcerer' />
+                    <HighlightButton onClick={() => this.handleHighlightClick('warlock')} label='Highlight Warlock' />
+                    <HighlightButton onClick={() => this.handleHighlightClick('wizard')} label='Highlight Wizard' />
+                </>
+            );
+        }
+    }
+
+    renderTitleCasterLabels() {
+
+        return this.state.highlightedCasters.map(caster => <CasterLabel key={caster} caster={caster}>{caster}</CasterLabel>);
+    }
+
     render() {
 
         return (
             <>
-                <Board>
-                    {this.renderSpells()}
-                </Board>
-                <SaveButton onClick={() => this.handleSave(this.state.spells)} />
-                <HighlightButton onClick={() => this.handleHighlightClick('bard')} label='Highlight Bard' />
-                <HighlightButton onClick={() => this.handleHighlightClick('cleric')} label='Highlight Cleric' />
-                <HighlightButton onClick={() => this.handleHighlightClick('druid')} label='Highlight Druid' />
-                <HighlightButton onClick={() => this.handleHighlightClick('paladin')} label='Highlight Paladin' />
-                <HighlightButton onClick={() => this.handleHighlightClick('ranger')} label='Highlight Ranger' />
-                <HighlightButton onClick={() => this.handleHighlightClick('sorcerer')} label='Highlight Sorcerer' />
-                <HighlightButton onClick={() => this.handleHighlightClick('warlock')} label='Highlight Warlock' />
-                <HighlightButton onClick={() => this.handleHighlightClick('wizard')} label='Highlight Wizard' />
-                <p>{this.state.editMode ? 'EDIT MODE, AUTOSAVING' : ''}</p>
+                <Wrapper>
+                    <Header>
+                        {this.state.highlightedCasters.length === 0 ? 'Spells of D&D 5e' : 'Spells known by '}
+                        {this.renderTitleCasterLabels()}
+                    </Header>
+                    <Board>
+                        {this.renderSpells()}
+                    </Board>
+                    <Aside>
+                        {this.renderButtons()}
+                    </Aside>
+                </Wrapper>
             </>
         );
     }
