@@ -268,7 +268,7 @@ class App extends React.Component {
             'spells': [],
             'selectedId': false,
             'highlightedClass': false,
-            'autosaving': false,
+            'autosaving': true,
             'timeSinceLastSave': 0
         };
 
