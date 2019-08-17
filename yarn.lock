@@ -787,7 +787,7 @@
   dependencies:
     regenerator-runtime "^0.13.2"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.3.4", "@babel/runtime@^7.4.2", "@babel/runtime@^7.5.5":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.3.4", "@babel/runtime@^7.4.2", "@babel/runtime@^7.4.5", "@babel/runtime@^7.5.5":
   version "7.5.5"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.5.5.tgz#74fba56d35efbeca444091c7850ccd494fd2f132"
   dependencies:
@@ -6100,6 +6100,12 @@ pnp-webpack-plugin@1.2.1:
   resolved "https://registry.yarnpkg.com/pnp-webpack-plugin/-/pnp-webpack-plugin-1.2.1.tgz#cd9d698df2a6fcf7255093c1c9511adf65b9421b"
   dependencies:
     ts-pnp "^1.0.0"
+
+polished@^3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/polished/-/polished-3.4.1.tgz#1eb5597ec1792206365635811d465751f5cbf71c"
+  dependencies:
+    "@babel/runtime" "^7.4.5"
 
 portfinder@^1.0.9:
   version "1.0.21"
