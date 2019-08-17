@@ -10,39 +10,9 @@ const color = {
     ranger: '#2EB82E',
     sorcerer: '#F2800D',
     warlock: '#A852FF',
-    wizard: '#4C88FF'
+    wizard: '#4C88FF',
+    multiple: '#fff'
 }
-
-/* Parsing a Google Sheets JSON */
-
-/*const casterTypes = ['Bard', 'Ranger', 'Druid', 'Cleric', 'Paladin', 'Warlock', 'Sorcerer', 'Wizard'];
-
-var coordX = 1;
-var coordY = 1;
-
-for (var currentKey in Spells) {
-
-    Spells[currentKey]['id'] = currentKey;
-    Spells[currentKey]['casters'] = [];
-    Spells[currentKey]['additionalCasters'] = [];
-    Spells[currentKey]['coordinates'] = [coordX, coordY];
-    if (++coordX > 19) {
-        coordX = 1;
-        coordY++;
-    }
-
-    for (var casterType of casterTypes) {
-        if (Spells[currentKey]['caster' + casterType] === casterType) {
-            Spells[currentKey]['casters'].push(casterType.toLowerCase());
-        } else if (Spells[currentKey]['caster' + casterType]) {
-            Spells[currentKey]['additionalCasters'].push(casterType.toLowerCase());
-        }
-    }
-
-    //console.log(Spells[currentKey]);
-}*/
-
-// end json import
 
 function gradientize(casters) {
     let gradient = 'conic-gradient(';
@@ -116,7 +86,7 @@ class SpellTooltip extends React.Component {
 
     renderCasterLabels(casters) {
 
-        return casters.map(caster => <CasterLabel caster={caster}>{caster}</CasterLabel>);
+        return casters.map(caster => <CasterLabel key={caster} caster={caster}>{caster}</CasterLabel>);
     }
 
     render() {
@@ -146,19 +116,19 @@ const StyledSpellTooltip = styled(SpellTooltip)`
     line-height: 1.3;
     padding: 0.75em;
     border-radius: 1em;
-    transition: box-shadow 0.15s, opacity 0.15s, transform 0.15s;
-    box-shadow: 0 0 1em 0 rgba(0,0,0,0.25);
+    transition: box-shadow 0.2s, opacity 0.2s, transform 0.2s;
+    box-shadow: 0 0 1em 0 rgba(0,0,0,0.5);
     z-index: 2;
 
     :before {
         content: '';
         position: absolute;
-        left: calc(50% - 5px);
-        top: -5px;
+        left: calc(50% - 10px);
+        top: -10px;
         width: 0;
         height: 0;
         border-style: solid;
-        border-width: 0 5px 5px 5px;
+        border-width: 0 10px 10px 10px;
         border-color: transparent transparent #111 transparent;
     }
 
@@ -179,10 +149,11 @@ const StyledSpellTooltip = styled(SpellTooltip)`
 `;
 
 const renderAdditionalCasters = additionalCasters => additionalCasters ?
-    additionalCasters.map(additionalCaster => <StyledAdditionalCaster caster={additionalCaster}/>) :
+    additionalCasters.map(additionalCaster => <StyledAdditionalCaster key={additionalCaster} caster={additionalCaster}/>) :
     '';
 
 function Spell(props) {
+
     return (
         <StyledSpell {...props} className={props.className} onClick={() => props.onClick()}>
             {renderAdditionalCasters(props.additionalCasters)}
@@ -194,7 +165,7 @@ function Spell(props) {
 
 const StyledSpell = styled.div.attrs({
     style: props => ({
-        background: gradientize(props.casters),
+        background: props.highlightColors.length ? gradientize(props.highlightColors) : gradientize(props.casters),
         gridColumnStart: props.coordinates[0],
         gridRowStart: props.coordinates[1]
     })
@@ -202,17 +173,16 @@ const StyledSpell = styled.div.attrs({
     width: 100%;
     padding-top: 100%;
     border-radius: 50%;
-    cursor: pointer;
     position: relative;
-
-    ${props => props.highlight ? 'box-shadow: 0 0 0 3px #222, 0 0 0 6px ' + color[props.highlight] : ';'}
-    ${props => props.selected ? 'box-shadow: 0 0 0 3px #fff' : ';'}
+    ${props => props.selected ? 'box-shadow: 0 0 0 3px #fff;' : ''}
     ${props => props.selected ? 'z-index: 2;' : ''}
-    ${props => (props.hasOpacity || props.highlight || props.selected) ? '' : 'opacity: 0.5;'}
+    ${props => (props.hasOpacity || props.highlightColors.length || props.selected) ? '' : 'opacity: 0.25;'}
+    transition: box-shadow 0.2s, opacity 0.2s;
 
     :hover {
-        ${props => props.selected ? 'box-shadow: 0 0 0 3px #fff;' : 'box-shadow: 0 0 0 3px rgba(255,255,255,0.5);'}
+        ${props => props.selected ? 'box-shadow: 0 0 0 6px #fff;' : 'box-shadow: 0 0 0 3px #222, 0 0 0 6px #fff;'}
         opacity: 1;
+        z-index: 2;
 
         ${StyledSpellTooltip} {
             opacity: 1;
@@ -267,15 +237,15 @@ class App extends React.Component {
         this.state = {
             'spells': [],
             'selectedId': false,
-            'highlightedClass': false,
-            'autosaving': true,
+            'highlightedClasses': [],
+            'editMode': false,
             'timeSinceLastSave': 0
         };
 
         var currentKey=0;
         for (currentKey in Spells) {
             this.state.spells[currentKey] = Spells[currentKey];
-            console.log(this.state.spells[currentKey]);
+            //console.log(this.state.spells[currentKey]);
         }
 
         this.state.selectedId = false;
@@ -293,11 +263,11 @@ class App extends React.Component {
     }
 
     tick() {
-        if (this.state.autosaving) {
+        if (this.state.editMode) {
             this.setState({
                 'timeSinceLastSave': this.state['timeSinceLastSave'] + 1000
             });
-            if (this.state['timeSinceLastSave'] > 300000) {
+            if (this.state['timeSinceLastSave'] > 100000) {
                 this.handleSave(this.state.spells);
                 this.setState({
                     'timeSinceLastSave': 0
@@ -318,60 +288,66 @@ class App extends React.Component {
     }
 
     handleClick(i) {
-        if (this.state.selectedId === i) {
-            this.setState({'selectedId': false});
-            console.log('unselected: '+i);
-        } else if (this.state.selectedId) {
-            console.log('switching position of ' + this.state.selectedId + ' and ' + i);
-            const { spells, selectedId } = this.state;
-            this.setState({
-                spells: swap(spells, Number(i), Number(selectedId)),
-                selectedId: false
-            });
-        } else {
-            this.setState({'selectedId': i});
-            console.log('selected: ' + i);
+        if (this.state.editMode) {
+            if (this.state.selectedId === i) {
+                this.setState({'selectedId': false});
+                console.log('unselected: '+i);
+            } else if (this.state.selectedId) {
+                console.log('switching position of ' + this.state.selectedId + ' and ' + i);
+                const { spells, selectedId } = this.state;
+                this.setState({
+                    spells: swap(spells, Number(i), Number(selectedId)),
+                    selectedId: false
+                });
+            } else {
+                this.setState({'selectedId': i});
+                console.log('selected: ' + i);
+            }
         }
     }
 
     handleHighlightClick(caster) {
-        var newHighlightedClass = (this.state.highlightedClass === caster) ? false : caster;
-        this.setState({highlightedClass: newHighlightedClass});
+        if (this.state.highlightedClasses.includes(caster)) {
+            /* if the caster was highlighted, we remove it from the highlighted classes */
+            //console.log('removing highlight from ' + caster);
+            this.setState({
+                highlightedClasses: this.state.highlightedClasses.filter(value =>  value !== caster)
+            });
+        } else {
+            /* if the caster was not highlighted, we add it to highlighted classes */
+            //console.log('highlighting ' + caster);
+            var newHighlightedClasses = this.state.highlightedClasses;
+            newHighlightedClasses.push(caster);
+            this.setState({
+                highlightedClasses: newHighlightedClasses
+            });
+        }
     }
 
-    renderSpell(i) {
-        //console.log(this.state.highlightedIds);
-        //console.log(this.state.highlightedIds.includes(this.state.spells[i]['id']) ? ' contains ' : 'does not contain ')
-        //console.log(this.state.spells[i]['id']);
+    getHighlightColors(casters) {
 
-        return (
-            <Spell
-                id={this.state.spells[i]['id']}
-                name={this.state.spells[i].name}
-                casters={this.state.spells[i]['casters']}
-                additionalCasters={this.state.spells[i]['additionalCasters']}
-                level={this.state.spells[i]['level']}
-                selected={this.state.selectedId === i ? true : false}
-                hasOpacity={!this.state.highlightedClass}
-                highlight={this.state.spells[i]['casters'].includes(this.state.highlightedClass) ? this.state.highlightedClass : false}
-                coordinates={this.state.spells[i]['coordinates']}
-                onClick={() => this.handleClick(i)}
-            />
-        );
+        return casters.filter(value => this.state.highlightedClasses.includes(value));
     }
 
     renderSpells() {
-        var spells = [];
 
-        for (var i in this.state.spells) {
-            spells.push(this.renderSpell(i));
-            //console.log(i);
-        }
-
-        return spells;
+        return this.state.spells.map(i => <Spell
+            key={i.id}
+            id={i.id}
+            name={i.name}
+            casters={i.casters}
+            additionalCasters={i.additionalCasters}
+            level={i.level}
+            selected={this.state.selectedId === i.id ? true : false}
+            hasOpacity={this.state.highlightedClasses.length === 0}
+            highlightColors={this.getHighlightColors(i.casters)}
+            coordinates={i.coordinates}
+            onClick={() => this.handleClick(i.id)}
+        />);
     }
 
     render() {
+
         return (
             <>
                 <Board>
@@ -386,7 +362,7 @@ class App extends React.Component {
                 <HighlightButton onClick={() => this.handleHighlightClick('sorcerer')} label='Highlight Sorcerer' />
                 <HighlightButton onClick={() => this.handleHighlightClick('warlock')} label='Highlight Warlock' />
                 <HighlightButton onClick={() => this.handleHighlightClick('wizard')} label='Highlight Wizard' />
-                <p>{this.state.autosaving ? 'Autosave is on' : 'Autosave is OFF!!'}</p>
+                <p>{this.state.editMode ? 'EDIT MODE, AUTOSAVING' : ''}</p>
             </>
         );
     }
