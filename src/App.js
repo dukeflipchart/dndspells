@@ -29,12 +29,23 @@ const Wrapper = styled.div`
 `;
 
 const Header = styled.header`
-    padding: 1em;
-    text-transform: uppercase;
+    padding: 5vw 5vw 3vw;
     text-align: center;
 
+    h1 {
+        font-size: 5vw;
+        margin: 0;
+    }
+
+    p {
+        font-family: 'Merriweather', serif;
+        font-size: 3vw;
+        line-height: 1.5;
+        color: #aaa;
+        margin: 3vw auto 0;
+    }
+
     ${CasterLabel} {
-        text-transform: uppercase;
 
         :after {
             content: 's';
@@ -52,14 +63,34 @@ const Board = styled.div`
     display: grid;
     grid-template-columns: repeat(19, 1fr);
     grid-gap: 0.75vw;
-    margin: 0.75vw;
+    margin: 2vw;
     @media only screen and (min-width: 1280px) {
         width: calc(1280px - 1.5 * 12.8px);
         grid-gap: calc(0.75 * 12.8px);
     }
 `;
 
-const Aside = styled.aside``;
+const Aside = styled.aside`
+    padding: 3vw 5vw;
+    text-align: left;
+
+    h2 {
+        font-size: 4vw;
+        margin: 0 auto 3vw;
+    }
+
+    p {
+        font-family: 'Merriweather', serif;
+        font-size: 3vw;
+        line-height: 1.5;
+        color: #aaa;
+        margin: 0 auto 3vw;
+    }
+
+    a {
+        color: #4C88FF;
+    }
+`;
 
 class App extends React.Component {
 
@@ -215,14 +246,23 @@ class App extends React.Component {
             <>
                 <Wrapper>
                     <Header>
-                        {this.state.highlightedCasters.length === 0 ? 'Spells of D&D 5e' : 'Spells known by '}
-                        {this.renderTitleCasterLabels()}
+                        <h1>
+                            Spells of D&D 5e
+                        </h1>
+                        <p>
+                            {this.state.highlightedCasters.length === 0 ? 'Click on a spell to highlight its casters' : 'Spells known by '}{this.renderTitleCasterLabels()}
+                        </p>
                     </Header>
                     <Board>
                         {this.renderSpells()}
                     </Board>
                     <Aside>
                         {this.renderButtons()}
+                        <h2>What is this thing?</h2>
+                        <p>Ever wondered how big of an overlap there is between the spells of different casters in DnD? Do you want to know how similar the classes are? Do you like looking at trippy abstract modern art? Then this graphic is for you.</p>
+                        <p>I took all 361 spells in the PHB, put them on a grid, colored them according to their caster classes, then meticulously arranged them to form clusters as tight as possible.</p>
+                        <p>If you enjoyed this, or found it useful, you can <a href='https://ko-fi.com/B0B511KTL'>buy me a coffee on Ko-Fi!</a></p>
+                        <h2></h2>
                     </Aside>
                 </Wrapper>
             </>

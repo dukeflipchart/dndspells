@@ -9,8 +9,7 @@ const color = {
     ranger: '#2EB82E',
     sorcerer: '#F2800D',
     warlock: '#A852FF',
-    wizard: '#4C88FF',
-    multiple: '#fff'
+    wizard: '#4C88FF'
 }
 
 function gradientize(casters) {
@@ -39,7 +38,7 @@ const StyledAdditionalCaster = styled(AdditionalCaster)`
     width: 1vw;
     height: 1vw;
     border-radius: 50%;
-    box-shadow: 0 0 0 3px #222;
+    box-shadow: 0 0 0 0.5vw #222;
     background-color: ${props => color[props.caster]};
 
     :first-of-type {
