@@ -35,10 +35,10 @@ function AdditionalCaster(props) {
 
 const StyledAdditionalCaster = styled(AdditionalCaster)`
     position: absolute;
-    width: 1vw;
-    height: 1vw;
+    width: 0.25em;
+    height: 0.25em;
     border-radius: 50%;
-    box-shadow: 0 0 0 0.5vw #222;
+    box-shadow: 0 0 0 0.1em #222;
     background-color: ${props => color[props.caster]};
 
     :first-of-type {
@@ -49,11 +49,6 @@ const StyledAdditionalCaster = styled(AdditionalCaster)`
     :nth-of-type(2) {
         top: 0;
         right: 0;
-    }
-
-    @media only screen and (min-width: 1280px) {
-        width: 12.8px;
-        height: 12.8px;
     }
 `;
 
@@ -80,7 +75,7 @@ class SpellTooltip extends React.Component {
         return(
             <div className={this.props.className}>
                 <h3>{this.props.name}</h3>
-                <h4>{this.props.level ? 'LEVEL' + this.props.level : 'CANTRIP'}</h4>
+                <h4>{this.props.level ? 'LEVEL ' + this.props.level : 'CANTRIP'}</h4>
                 <p>{this.renderCasterLabels(this.props.casters)}{this.props.additionalCasters.length > 0 ? ' and subclasses of ' : ''}{this.renderCasterLabels(this.props.additionalCasters)}</p>
             </div>
         );
@@ -92,30 +87,30 @@ const StyledSpellTooltip = styled(SpellTooltip)`
     visibility: hidden;
     display: block;
     position: absolute;
-    min-width: 20vw;
+    min-width: 10em;
     top: 110%;
     left: 50%;
     transform: translateX(-50%) translateY(10px);
     background-color: #111;
     color: #aaa;
-    font-size: 2vw;
+    font-size: 0.5em;
     line-height: 1.3;
-    padding: 2vw;
-    border-radius: 2vw;
+    padding: 0.75em;
+    border-radius: 0.5em;
     transition: box-shadow 0.2s, opacity 0.2s, transform 0.2s;
-    box-shadow: 0 0 2vw 0 rgba(0,0,0,0.5);
+    box-shadow: 0 0 1em 0 rgba(0,0,0,0.5);
     z-index: 2;
     ${props => props.selected ? 'opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0);' : '' }
 
     :before {
         content: '';
         position: absolute;
-        left: calc(50% - 1vw);
-        top: -1vw;
+        left: calc(50% - 0.5em);
+        top: -0.5em;
         width: 0;
         height: 0;
         border-style: solid;
-        border-width: 0 1vw 1vw 1vw;
+        border-width: 0 0.5em 0.5em 0.5em;
         border-color: transparent transparent #111 transparent;
     }
 
@@ -168,13 +163,13 @@ export const StyledSpell = styled.div.attrs({
     padding-top: 100%;
     border-radius: 50%;
     position: relative;
-    ${props => props.selected ? 'box-shadow: 0 0 0 3px #fff;' : ''}
+    ${props => props.selected ? 'box-shadow: 0 0 0 0.1em #fff;' : ''}
     ${props => props.selected ? 'z-index: 2;' : ''}
     ${props => (props.hasOpacity || props.highlightColors.length || props.selected) ? '' : 'opacity: 0.25;'}
     transition: box-shadow 0.2s, opacity 0.2s;
 
     :hover {
-        ${props => props.selected ? 'box-shadow: 0 0 0 6px #fff;' : 'box-shadow: 0 0 0 3px #222, 0 0 0 6px #fff;'}
+        ${props => props.selected ? 'box-shadow: 0 0 0 0.2em #fff;' : 'box-shadow: 0 0 0 0.1em #222, 0 0 0 0.2em #fff;'}
         opacity: 1;
         z-index: 2;
 

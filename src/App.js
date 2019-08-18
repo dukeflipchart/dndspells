@@ -26,25 +26,25 @@ function swap(spells, i1, i2) {
 }
 
 const Wrapper = styled.div`
-    font-size: 12px;
+    font-size: 3vw;
 `;
 
 const Header = styled.header`
-    padding: 5vw 5vw 3vw;
+    padding: 1.5em 1.5em 1em;
     text-align: center;
 
     h1 {
-        font-size: 5vw;
+        font-size: 1.5em;
         margin: 0;
         text-transform: uppercase;
     }
 
     p {
         font-family: 'Merriweather', serif;
-        font-size: 3vw;
+        font-size: 1em;
         line-height: 1.5;
         color: #aaa;
-        margin: 3vw auto 0;
+        margin: 1em auto 0;
     }
 
     ${CasterLabel} {
@@ -64,35 +64,31 @@ const Header = styled.header`
 const Board = styled.div`
     display: grid;
     grid-template-columns: repeat(19, 1fr);
-    grid-gap: 0.75vw;
-    margin: 2vw;
-    @media only screen and (min-width: 1280px) {
-        width: calc(1280px - 1.5 * 12.8px);
-        grid-gap: calc(0.75 * 12.8px);
-    }
+    grid-gap: 0.25em;
+    margin: 0.5em;
 `;
 
 const Aside = styled.aside`
     color: #aaa;
-    padding: 3vw 5vw;
+    padding: 1em 1.5em;
     text-align: left;
 
     h2 {
         color: #fff;
-        font-size: 4vw;
-        margin: 0 auto 3vw;
+        font-size: 1.25em;
+        margin: 0 auto 1em;
         text-transform: uppercase;
 
         :not(:first-of-type) {
-            margin-top: 6vw;
+            margin-top: 2em;
         }
     }
 
     p {
         font-family: 'Merriweather', serif;
-        font-size: 3vw;
+        font-size: 1em;
         line-height: 1.5;
-        margin: 0 auto 3vw;
+        margin: 0 auto 1em;
     }
 
     a {
@@ -104,13 +100,13 @@ const Aside = styled.aside`
     }
 
     img {
-        width: 20vw;
+        width: 7em;
         border-radius: 50%;
     }
 `;
 
 const Logo = styled.div`
-    margin-top: 6vw;
+    margin-top: 2em;
     text-align: center;
 
     a {
@@ -119,7 +115,7 @@ const Logo = styled.div`
 
     p {
         font-family: 'Lato', sans-serif;
-        margin-top: 1vw;
+        margin-top: 0.25em;
     }
 `;
 
