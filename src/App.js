@@ -27,6 +27,10 @@ function swap(spells, i1, i2) {
 
 const Wrapper = styled.div`
     font-size: 3vw;
+
+    @media screen and (min-width: 801px) {
+        font-size: 16px;
+    }
 `;
 
 const Header = styled.header`
@@ -72,6 +76,11 @@ const Aside = styled.aside`
     color: #aaa;
     padding: 1em 1.5em;
     text-align: left;
+
+    @media only screen and (min-width: 801px) {
+        width: 600px;
+        margin: 0 auto;
+    }
 
     h2 {
         color: #fff;

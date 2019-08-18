@@ -35,10 +35,10 @@ function AdditionalCaster(props) {
 
 const StyledAdditionalCaster = styled(AdditionalCaster)`
     position: absolute;
-    width: 0.25em;
-    height: 0.25em;
+    width: 25%;
+    height: 25%;
     border-radius: 50%;
-    box-shadow: 0 0 0 0.1em #222;
+    box-shadow: 0 0 0 0.15em #222;
     background-color: ${props => color[props.caster]};
 
     :first-of-type {
@@ -93,7 +93,7 @@ const StyledSpellTooltip = styled(SpellTooltip)`
     transform: translateX(-50%) translateY(10px);
     background-color: #111;
     color: #aaa;
-    font-size: 0.5em;
+    font-size: 0.75em;
     line-height: 1.3;
     padding: 0.75em;
     border-radius: 0.5em;
