@@ -92,30 +92,30 @@ const StyledSpellTooltip = styled(SpellTooltip)`
     visibility: hidden;
     display: block;
     position: absolute;
-    min-width: 10em;
+    min-width: 20vw;
     top: 110%;
     left: 50%;
     transform: translateX(-50%) translateY(10px);
     background-color: #111;
     color: #aaa;
-    font-size: 0.75em;
+    font-size: 2vw;
     line-height: 1.3;
-    padding: 0.75em;
-    border-radius: 1em;
+    padding: 2vw;
+    border-radius: 2vw;
     transition: box-shadow 0.2s, opacity 0.2s, transform 0.2s;
-    box-shadow: 0 0 1em 0 rgba(0,0,0,0.5);
+    box-shadow: 0 0 2vw 0 rgba(0,0,0,0.5);
     z-index: 2;
     ${props => props.selected ? 'opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0);' : '' }
 
     :before {
         content: '';
         position: absolute;
-        left: calc(50% - 10px);
-        top: -10px;
+        left: calc(50% - 1vw);
+        top: -1vw;
         width: 0;
         height: 0;
         border-style: solid;
-        border-width: 0 10px 10px 10px;
+        border-width: 0 1vw 1vw 1vw;
         border-color: transparent transparent #111 transparent;
     }
 

@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { color, Spell, StyledSpell, CasterLabel } from './spell';
 import Spells from './spells';
+import avatar from './taurus2.jpg';
 
 function SaveButton(props) {
 
@@ -35,6 +36,7 @@ const Header = styled.header`
     h1 {
         font-size: 5vw;
         margin: 0;
+        text-transform: uppercase;
     }
 
     p {
@@ -71,24 +73,53 @@ const Board = styled.div`
 `;
 
 const Aside = styled.aside`
+    color: #aaa;
     padding: 3vw 5vw;
     text-align: left;
 
     h2 {
+        color: #fff;
         font-size: 4vw;
         margin: 0 auto 3vw;
+        text-transform: uppercase;
+
+        :not(:first-of-type) {
+            margin-top: 6vw;
+        }
     }
 
     p {
         font-family: 'Merriweather', serif;
         font-size: 3vw;
         line-height: 1.5;
-        color: #aaa;
         margin: 0 auto 3vw;
     }
 
     a {
         color: #4C88FF;
+
+        :hover {
+            color: #A852FF;
+        }
+    }
+
+    img {
+        width: 20vw;
+        border-radius: 50%;
+    }
+`;
+
+const Logo = styled.div`
+    margin-top: 6vw;
+    text-align: center;
+
+    a {
+        text-decoration: none;
+    }
+
+    p {
+        font-family: 'Lato', sans-serif;
+        margin-top: 1vw;
     }
 `;
 
@@ -260,9 +291,18 @@ class App extends React.Component {
                         {this.renderButtons()}
                         <h2>What is this thing?</h2>
                         <p>Ever wondered how big of an overlap there is between the spells of different casters in DnD? Do you want to know how similar the classes are? Do you like looking at trippy abstract modern art? Then this graphic is for you.</p>
-                        <p>I took all 361 spells in the PHB, put them on a grid, colored them according to their caster classes, then meticulously arranged them to form clusters as tight as possible.</p>
+                        <p>I took all 361 spells in the PHB, put them on a grid, colored them according to their caster classes, then meticulously arranged them by hand to form clusters as tight as possible.</p>
                         <p>If you enjoyed this, or found it useful, you can <a href='https://ko-fi.com/B0B511KTL'>buy me a coffee on Ko-Fi!</a></p>
-                        <h2></h2>
+                        <h2>Will you include spells from other sources (DMG, SCAG, XGE, AI)?</h2>
+                        <p>Yeah! Maybe. It's, uh, a lot of work, so it will probably take time.</p>
+                        <h2>How did you make this?</h2>
+                        <p>I used <a href="https://www.reddit.com/r/DnD/comments/2qs89e/5e_spell_reference_sheets_are_done/">u/Zolo49's spell spreadsheet</a> as a resource, made a JSON file out of it, displayed them on a CSS grid, and used React to create an editing interface that I used to order the spells into these positions.</p>
+                        <Logo>
+                            <a href="http://github.com/dukeflipchart">
+                                <img src={avatar} />
+                                <p>made by dukeflipchart</p>
+                            </a>
+                        </Logo>
                     </Aside>
                 </Wrapper>
             </>
