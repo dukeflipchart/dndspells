@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const color = {
+export const color = {
     bard: '#E052E0',
     cleric: '#EB4747',
     druid: '#60DF20',
@@ -40,6 +40,12 @@ const StyledAdditionalCaster = styled(AdditionalCaster)`
     border-radius: 50%;
     box-shadow: 0 0 0 0.15em #222;
     background-color: ${props => color[props.caster]};
+
+    @media screen and (min-width: 1920px) {
+        width: 25%;
+        height: 25%;
+        box-shadow: 0 0 0 0.15vw #222;
+    }
 
     :first-of-type {
         top: 0;
@@ -137,19 +143,27 @@ const StyledSpellTooltip = styled(SpellTooltip)`
     }
 `;
 
-const renderAdditionalCasters = additionalCasters => additionalCasters ?
+/*const renderAdditionalCasters = additionalCasters => additionalCasters ?
     additionalCasters.map(additionalCaster => <StyledAdditionalCaster key={additionalCaster} caster={additionalCaster}/>) :
-    '';
+    '';*/
 
-export function Spell(props) {
+export class Spell extends React.Component {
 
-    return (
-        <StyledSpell {...props} className={props.className} onClick={() => props.onClick()}>
-            {renderAdditionalCasters(props.additionalCasters)}
-            <SpellLevel></SpellLevel>
-            <StyledSpellTooltip name={props.name} level={props.level} casters={props.casters} additionalCasters={props.additionalCasters} selected={props.selected} />
-        </StyledSpell>
-    );
+    renderAdditionalCasters() {
+
+        return this.props.additionalCastersShown.map(additionalCaster => <StyledAdditionalCaster key={additionalCaster} caster={additionalCaster}/>);
+    }
+
+    render() {
+
+        return(
+            <StyledSpell {...this.props} className={this.props.className} onClick={() => this.props.onClick()}>
+                {this.renderAdditionalCasters(this.props.additionalCastersShown)}
+                <SpellLevel></SpellLevel>
+                <StyledSpellTooltip name={this.props.name} level={this.props.level} casters={this.props.casters} additionalCasters={this.props.additionalCasters} selected={this.props.selected} />
+            </StyledSpell>
+        );
+    }
 }
 
 export const StyledSpell = styled.div.attrs({
@@ -168,8 +182,12 @@ export const StyledSpell = styled.div.attrs({
     ${props => (props.hasOpacity || props.highlightColors.length || props.selected) ? '' : 'opacity: 0.25;'}
     transition: box-shadow 0.2s, opacity 0.2s;
 
+    @media screen and (min-width: 1920px) {
+        ${props => props.selected ? 'box-shadow: 0 0 0 0.5vh #fff;' : ''}
+    }
+
     :hover {
-        ${props => props.selected ? 'box-shadow: 0 0 0 0.2em #fff;' : 'box-shadow: 0 0 0 0.1em #222, 0 0 0 0.2em #fff;'}
+        ${props => props.selected ? 'box-shadow: 0 0 0 0.2em #fff;' : 'box-shadow: 0 0 0 0.25vh #222, 0 0 0 0.5vh #fff;'}
         opacity: 1;
         z-index: 2;
 

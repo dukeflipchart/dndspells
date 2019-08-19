@@ -14,6 +14,20 @@ function HighlightButton(props) {
     return <button onClick={() => props.onClick()}>{props.label}</button>;
 }
 
+const ResetButton = styled.a`
+    display: block;
+    flex: 0 1 auto;
+    margin-left: 1em;
+    padding: 1em;
+    border: 1px solid ${color.wizard};
+    border-radius: 3em;
+    text-decoration: none;
+
+    :hover {
+        border: 1px solid ${color.warlock};
+    }
+`;
+
 function swap(spells, i1, i2) {
 
     return spells.map((spell, index) => {
@@ -24,6 +38,12 @@ function swap(spells, i1, i2) {
         }
     });
 }
+
+const ResetButtonWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+    margin-top: 1em;
+`;
 
 const Wrapper = styled.div`
     font-size: 3vw;
@@ -37,6 +57,14 @@ const Wrapper = styled.div`
         height: 100%;
         align-items: center;
     }
+
+    a {
+        color: #4C88FF;
+
+        :hover {
+            color: #A852FF;
+        }
+    }
 `;
 
 const Header = styled.header`
@@ -48,7 +76,7 @@ const Header = styled.header`
     }
 
     h1 {
-        font-size: 1.5em;
+        font-size: 2em;
         margin: 0;
 
         @media screen and (min-width: 1920px) {
@@ -59,7 +87,7 @@ const Header = styled.header`
     p {
         font-family: 'Merriweather', serif;
         font-size: 1em;
-        line-height: 1.5;
+        line-height: 1.7;
         color: #aaa;
         margin: 1em auto 0;
     }
@@ -99,16 +127,24 @@ const Board = styled.div`
     grid-template-columns: repeat(19, 1fr);
     grid-gap: 0.25em;
     margin: 0.5em;
+
+    @media screen and (min-width: 1920px) {
+        grid-gap: 0.75vh;
+        margin: 1.5vh;
+    }
 `;
 
 const Aside = styled.aside`
     max-width: 600px;
     margin: 0 auto;
     color: #aaa;
-    columns: 2 10em;
-    column-gap: 1.5em;
     padding: 1em 1.5em;
     text-align: left;
+
+    @media only screen and (min-width: 600px) {
+        columns: 2 10em;
+        column-gap: 1.5em;
+    }
 
     @media screen and (min-width: 1920px) {
         flex: 1 1 20%;
@@ -128,16 +164,8 @@ const Aside = styled.aside`
     p {
         font-family: 'Merriweather', serif;
         font-size: 1em;
-        line-height: 1.5;
+        line-height: 1.7;
         margin: 0 auto 1em;
-    }
-
-    a {
-        color: #4C88FF;
-
-        :hover {
-            color: #A852FF;
-        }
     }
 
     img {
@@ -156,8 +184,10 @@ const Logo = styled.div`
 `;
 
 const ColumnBreakerH2 = styled.h2`
-    break-before: column;
-    margin-top: 0;
+    @media only screen and (min-width: 800px) {
+        break-before: column;
+        margin-top: 0;
+    }
 `;
 
 class App extends React.Component {
@@ -273,7 +303,8 @@ class App extends React.Component {
             id={i.id}
             name={i.name}
             casters={i.casters}
-            additionalCasters={this.state.highlightedCasters.length === 0 ? i.additionalCasters : []}
+            additionalCasters={i.additionalCasters}
+            additionalCastersShown={ this.state.highlightedCasters.length === 0 ? i.additionalCasters : []}
             level={i.level}
             selected={this.state.selectedId === i.id ? true : false}
             hasOpacity={this.state.highlightedCasters.length === 0}
@@ -308,6 +339,17 @@ class App extends React.Component {
         return this.state.highlightedCasters.map(caster => <CasterLabel key={caster} caster={caster}>{caster}</CasterLabel>);
     }
 
+    renderResetButton() {
+        if (this.state.highlightedCasters.length !== 0) {
+
+            return (
+                <ResetButtonWrapper>
+                    <ResetButton onClick={() => this.setState({highlightedCasters: []})} href='#'>🡠 Show all</ResetButton>
+                </ResetButtonWrapper>
+            );
+        }
+    }
+
     render() {
 
         return (
@@ -318,7 +360,7 @@ class App extends React.Component {
                             The Spells of D&D 5e
                         </h1>
                         <p>
-                            {this.state.highlightedCasters.length === 0 ? 'Click on a spell to highlight its casters' : 'Spells known by '}{this.renderTitleCasterLabels()}
+                            {this.state.highlightedCasters.length === 0 ? 'Click on a spell to highlight its casters 🡢 ' : 'Spells known by '}{this.renderTitleCasterLabels()}{this.renderResetButton()}
                         </p>
                     </Header>
                     <BoardWrapper>
