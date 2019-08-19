@@ -28,8 +28,14 @@ function swap(spells, i1, i2) {
 const Wrapper = styled.div`
     font-size: 3vw;
 
-    @media screen and (min-width: 801px) {
+    @media screen and (min-width: 601px) {
         font-size: 16px;
+    }
+
+    @media screen and (min-width: 1920px) {
+        display: flex;
+        height: 100%;
+        align-items: center;
     }
 `;
 
@@ -37,10 +43,17 @@ const Header = styled.header`
     padding: 1.5em 1.5em 1em;
     text-align: center;
 
+    @media screen and (min-width: 1920px) {
+        flex: 1 1 20%;
+    }
+
     h1 {
         font-size: 1.5em;
         margin: 0;
-        text-transform: uppercase;
+
+        @media screen and (min-width: 1920px) {
+            font-size: 5em;
+        }
     }
 
     p {
@@ -65,6 +78,22 @@ const Header = styled.header`
     }
 `;
 
+const BoardWrapper = styled.div`
+    @media screen and (min-aspect-ratio: 4/3) and (max-aspect-ratio: 3/2) {
+        max-width: 55%;
+        margin: 0 auto;
+    }
+
+    @media screen and (min-aspect-ratio: 3/2) and (max-width: 1919px) {
+        max-width: 45%;
+        margin: 0 auto;
+    }
+
+    @media screen and (min-width: 1920px) {
+        flex: 1 1 50%;
+    }
+`;
+
 const Board = styled.div`
     display: grid;
     grid-template-columns: repeat(19, 1fr);
@@ -73,13 +102,20 @@ const Board = styled.div`
 `;
 
 const Aside = styled.aside`
+    max-width: 600px;
+    margin: 0 auto;
     color: #aaa;
+    columns: 2 10em;
+    column-gap: 1.5em;
     padding: 1em 1.5em;
     text-align: left;
 
-    @media only screen and (min-width: 801px) {
-        width: 600px;
-        margin: 0 auto;
+    @media screen and (min-width: 1920px) {
+        flex: 1 1 20%;
+    }
+
+    @media screen and (min-width: 2560px) {
+
     }
 
     h2 {
@@ -87,10 +123,6 @@ const Aside = styled.aside`
         font-size: 1.25em;
         margin: 0 auto 1em;
         text-transform: uppercase;
-
-        :not(:first-of-type) {
-            margin-top: 2em;
-        }
     }
 
     p {
@@ -117,15 +149,15 @@ const Aside = styled.aside`
 const Logo = styled.div`
     margin-top: 2em;
     text-align: center;
-
+    column-span: all;
     a {
         text-decoration: none;
     }
+`;
 
-    p {
-        font-family: 'Lato', sans-serif;
-        margin-top: 0.25em;
-    }
+const ColumnBreakerH2 = styled.h2`
+    break-before: column;
+    margin-top: 0;
 `;
 
 class App extends React.Component {
@@ -283,29 +315,30 @@ class App extends React.Component {
                 <Wrapper>
                     <Header>
                         <h1>
-                            Spells of D&D 5e
+                            The Spells of D&D 5e
                         </h1>
                         <p>
                             {this.state.highlightedCasters.length === 0 ? 'Click on a spell to highlight its casters' : 'Spells known by '}{this.renderTitleCasterLabels()}
                         </p>
                     </Header>
-                    <Board>
-                        {this.renderSpells()}
-                    </Board>
+                    <BoardWrapper>
+                        <Board>
+                            {this.renderSpells()}
+                        </Board>
+                    </BoardWrapper>
                     <Aside>
                         {this.renderButtons()}
                         <h2>What is this thing?</h2>
                         <p>Ever wondered how big of an overlap there is between the spells of different casters in DnD? Do you want to know how similar the classes are? Do you like looking at trippy abstract modern art? Then this graphic is for you.</p>
                         <p>I took all 361 spells in the PHB, put them on a grid, colored them according to their caster classes, then meticulously arranged them by hand to form clusters as tight as possible.</p>
                         <p>If you enjoyed this, or found it useful, you can <a href='https://ko-fi.com/B0B511KTL'>buy me a coffee on Ko-Fi!</a></p>
-                        <h2>Will you include spells from other sources (DMG, SCAG, XGE, AI)?</h2>
+                        <ColumnBreakerH2>Will you include spells from other sources (DMG, SCAG, XGE, AI)?</ColumnBreakerH2>
                         <p>Yeah! Maybe. It's, uh, a lot of work, so it will probably take time.</p>
                         <h2>How did you make this?</h2>
                         <p>I used <a href="https://www.reddit.com/r/DnD/comments/2qs89e/5e_spell_reference_sheets_are_done/">u/Zolo49's spell spreadsheet</a> as a resource, made a JSON file out of it, displayed them on a CSS grid, and used React to create an editing interface that I used to order the spells into these positions.</p>
                         <Logo>
                             <a href="http://github.com/dukeflipchart">
                                 <img src={avatar} />
-                                <p>made by dukeflipchart</p>
                             </a>
                         </Logo>
                     </Aside>
