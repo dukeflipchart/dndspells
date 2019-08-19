@@ -106,7 +106,6 @@ const StyledSpellTooltip = styled(SpellTooltip)`
     transition: box-shadow 0.2s, opacity 0.2s, transform 0.2s;
     box-shadow: 0 0 1em 0 rgba(0,0,0,0.5);
     z-index: 2;
-    ${props => props.selected ? 'opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0);' : '' }
 
     :before {
         content: '';
@@ -181,6 +180,7 @@ export const StyledSpell = styled.div.attrs({
     ${props => props.selected ? 'z-index: 2;' : ''}
     ${props => (props.hasOpacity || props.highlightColors.length || props.selected) ? '' : 'opacity: 0.25;'}
     transition: box-shadow 0.2s, opacity 0.2s;
+    cursor: pointer;
 
     @media screen and (min-width: 1920px) {
         ${props => props.selected ? 'box-shadow: 0 0 0 0.5vh #fff;' : ''}
@@ -207,6 +207,7 @@ const SpellLevel = styled.div`
     font-size: 1.5vw;
     line-height: 1.5vw;
     text-align: center;
+    color: #222;
 
     @media only screen and (min-width: 1280px) {
         top: calc(50% - 0.75 * 12.8px);

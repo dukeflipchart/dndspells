@@ -4,15 +4,41 @@ import { color, Spell, StyledSpell, CasterLabel } from './spell';
 import Spells from './spells';
 import avatar from './taurus2.jpg';
 
+const EditModeMessage = styled.div`
+    background-color: ${color.paladin};
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 0.75em;
+    font-family: 'Lato', sans-serif;
+    padding: 1em;
+    margin-top: 1em;
+
+    p {
+        color: #222;
+        margin: 0 0 1em 0;
+    }
+`;
+
 function SaveButton(props) {
 
-    return <button onClick={() => props.onClick()}>Save</button>;
+    return <a className={props.className} href="#" onClick={() => props.onClick()}>Save</a>;
 }
 
-function HighlightButton(props) {
+const StyledSaveButton = styled(SaveButton)`
+    color: #222;
+    display: block;
+    margin-left: 0;
+    padding: 0.5em 1em;
+    border: 1px solid #222;
+    border-radius: 0.75em;
+    text-decoration: none;
 
-    return <button onClick={() => props.onClick()}>{props.label}</button>;
-}
+    :hover {
+        color: ${color.paladin};
+        background-color: #222;
+    }
+`;
 
 const ResetButton = styled.a`
     flex: 0 1 auto;
@@ -65,14 +91,6 @@ const Wrapper = styled.div`
         height: 100%;
         align-items: center;
     }
-
-    a {
-        color: #4C88FF;
-
-        :hover {
-            color: #A852FF;
-        }
-    }
 `;
 
 const Header = styled.header`
@@ -92,9 +110,10 @@ const Header = styled.header`
         }
     }
 
-    p {
+    h3 {
         font-family: 'Merriweather', serif;
         font-size: 1em;
+        font-weight: normal;
         line-height: 1.7;
         color: #aaa;
         margin: 1em auto 0;
@@ -281,24 +300,6 @@ class App extends React.Component {
         }
     }
 
-    handleHighlightClick(caster) {
-        if (this.state.highlightedCasters.includes(caster)) {
-            /* if the caster was highlighted, we remove it from the highlighted classes */
-            //console.log('removing highlight from ' + caster);
-            this.setState({
-                highlightedCasters: this.state.highlightedCasters.filter(value =>  value !== caster)
-            });
-        } else {
-            /* if the caster was not highlighted, we add it to highlighted classes */
-            //console.log('highlighting ' + caster);
-            var newhighlightedCasters = this.state.highlightedCasters;
-            newhighlightedCasters.push(caster);
-            this.setState({
-                highlightedCasters: newhighlightedCasters
-            });
-        }
-    }
-
     getHighlightColors(casters) {
 
         return casters.filter(value => this.state.highlightedCasters.includes(value));
@@ -326,18 +327,10 @@ class App extends React.Component {
         if (this.state.editMode) {
 
             return (
-                <>
+                <EditModeMessage>
                     <p>EDIT MODE, AUTOSAVING</p>
-                    <SaveButton onClick={() => this.handleSave(this.state.spells)} />
-                    <HighlightButton onClick={() => this.handleHighlightClick('bard')} label='Highlight Bard' />
-                    <HighlightButton onClick={() => this.handleHighlightClick('cleric')} label='Highlight Cleric' />
-                    <HighlightButton onClick={() => this.handleHighlightClick('druid')} label='Highlight Druid' />
-                    <HighlightButton onClick={() => this.handleHighlightClick('paladin')} label='Highlight Paladin' />
-                    <HighlightButton onClick={() => this.handleHighlightClick('ranger')} label='Highlight Ranger' />
-                    <HighlightButton onClick={() => this.handleHighlightClick('sorcerer')} label='Highlight Sorcerer' />
-                    <HighlightButton onClick={() => this.handleHighlightClick('warlock')} label='Highlight Warlock' />
-                    <HighlightButton onClick={() => this.handleHighlightClick('wizard')} label='Highlight Wizard' />
-                </>
+                    <StyledSaveButton onClick={() => this.handleSave(this.state.spells)} />
+                </EditModeMessage>
             );
         }
     }
@@ -367,9 +360,9 @@ class App extends React.Component {
                         <h1>
                             The Spells of D&D 5e
                         </h1>
-                        <p>
-                            {this.state.highlightedCasters.length === 0 ? 'Click on a spell to highlight its casters 🡢 ' : 'Spells known by '}{this.renderTitleCasterLabels()}{this.renderResetButton()}
-                        </p>
+                        <h3>
+                            {this.state.highlightedCasters.length === 0 ? 'Click on a spell to highlight its casters 🡢 ' : 'Spells known by '}{this.renderTitleCasterLabels()}{this.renderResetButton()}{this.renderButtons()}
+                        </h3>
                     </Header>
                     <BoardWrapper>
                         <Board>
@@ -377,7 +370,6 @@ class App extends React.Component {
                         </Board>
                     </BoardWrapper>
                     <Aside>
-                        {this.renderButtons()}
                         <h2>What is this thing?</h2>
                         <p>Ever wondered how big of an overlap there is between the spells of different casters in DnD? Do you want to know how similar the classes are? Do you like looking at trippy abstract modern art? Then this graphic is for you.</p>
                         <p>I took all 361 spells in the PHB, put them on a grid, colored them according to their caster classes, then meticulously arranged them by hand to form clusters as tight as possible.</p>
