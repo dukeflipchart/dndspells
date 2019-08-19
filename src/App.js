@@ -15,16 +15,20 @@ function HighlightButton(props) {
 }
 
 const ResetButton = styled.a`
-    display: block;
     flex: 0 1 auto;
     margin-left: 1em;
-    padding: 1em;
-    border: 1px solid ${color.wizard};
-    border-radius: 3em;
-    text-decoration: none;
+    border-radius: 0.75em;
 
-    :hover {
-        border: 1px solid ${color.warlock};
+    @media only screen and (min-width: 1920px) {
+        display: block;
+        margin-left: 0;
+        padding: 0.5em 1em;
+        border: 1px solid ${color.wizard};
+        text-decoration: none;
+
+        :hover {
+            border: 1px solid ${color.warlock};
+        }
     }
 `;
 
@@ -40,9 +44,13 @@ function swap(spells, i1, i2) {
 }
 
 const ResetButtonWrapper = styled.div`
-    display: flex;
-    justify-content: center;
-    margin-top: 1em;
+    display: inline;
+
+    @media only screen and (min-width: 1920px) {
+        display: flex;
+        justify-content: center;
+        margin-top: 1em;
+    }
 `;
 
 const Wrapper = styled.div`
@@ -344,7 +352,7 @@ class App extends React.Component {
 
             return (
                 <ResetButtonWrapper>
-                    <ResetButton onClick={() => this.setState({highlightedCasters: []})} href='#'>🡠 Show all</ResetButton>
+                    <ResetButton onClick={() => this.setState({highlightedCasters: []})} href='#'>Show all</ResetButton>
                 </ResetButtonWrapper>
             );
         }
