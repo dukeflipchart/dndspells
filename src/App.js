@@ -356,14 +356,14 @@ class App extends React.Component {
         }
     }
 
-    renderResetButton() {
+    /*renderResetButton() {
         if (this.state.highlightedCasters.length !== 0) {
 
             return (
                 <StyledButton onClick={() => this.setState({highlightedCasters: []})} label='Reset' />
             );
         }
-    }
+    }*/
 
     renderTitleCasterLabels() {
 
