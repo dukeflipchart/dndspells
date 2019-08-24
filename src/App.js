@@ -224,7 +224,7 @@ class App extends React.Component {
             'spells': [],
             'selectedId': false,
             'highlightedCasters': [],
-            'editMode': true,
+            'editMode': false,
             'timeSinceLastSave': 0
         };
 
@@ -313,7 +313,7 @@ class App extends React.Component {
         return casters.filter(value => this.state.highlightedCasters.includes(value));
     }
 
-    renderButtons() {
+    renderEditUi() {
         if (this.state.editMode) {
 
             return (
@@ -329,9 +329,7 @@ class App extends React.Component {
         if (this.state.highlightedCasters.length !== 0) {
 
             return (
-                <ResetButtonWrapper>
-                    <StyledButton onClick={() => this.setState({highlightedCasters: []})} label='Show all' />
-                </ResetButtonWrapper>
+                <StyledButton onClick={() => this.setState({highlightedCasters: []})} label='Show all' />
             );
         }
     }
@@ -351,10 +349,11 @@ class App extends React.Component {
                             The Spells of D&D 5e
                         </h1>
                         <h3>
-                            {this.state.highlightedCasters.length === 0 ? 'Click on a spell to highlight its casters ' : 'Spells known by '}{this.renderTitleCasterLabels()}{this.renderResetButton()}{this.renderButtons()}
+                            {this.state.highlightedCasters.length === 0 ? 'Click on a spell to highlight its casters ' : 'Spells known by '}{this.renderTitleCasterLabels()}{this.renderEditUi()}
                         </h3>
                         <div>
                             {casters.map(caster => <StyledButton key={caster} label={caster} onClick={() => this.handleHighlightClick(caster)} />)}
+                            {this.renderResetButton()}
                         </div>
                     </Header>
                     <BoardWrapper>
