@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { lighten } from 'polished';
+
 import { color, Spell, StyledSpell, CasterLabel } from './spell';
 import Spells from './spells';
 import avatar from './taurus2.jpg';
@@ -31,28 +33,57 @@ const EditModeMessage = styled.div`
     }
 `;
 
+const HighlightLabel = styled.span`
+    margin-right: 0.5em;
+    color: #aaa;
+    text-transform: uppercase;
+`;
+
 function Button(props) {
 
     return <button className={props.className} href="#" onClick={() => props.onClick()}>{props.label}</button>
 }
 
 const StyledButton = styled(Button)`
-    border: 0;
+    border: 1px solid ${props => props.color ? props.color : '#ccc'};
     border-radius: 0.75rem;
-    background: #222;
-    color: ${color.wizard};
+    background: ${props => props.filled
+        ? props.color
+            ? props.color
+            : '#ccc'
+        : '#222' };
+    color: ${props => props.filled
+        ? '#222'
+        : props.color
+            ? props.color
+            : '#ccc'};
     font-family: 'Lato', sans-serif;
-    font-size: 1rem;
+    font-size: 1em;
     line-height: 1.3;
     white-space: nowrap;
     text-decoration: none;
-    padding: 0.25rem 0.5rem;
-    margin: 0.25rem;
+    text-transform: uppercase;
+    padding: 0.75em 1em;
+    margin: 0.5em;
     cursor: pointer;
+    outline: none;
 
     :hover {
-        color: ${color.paladin};
-        background-color: #222;
+        border: 1px solid ${props => props.filled
+        ? '#222'
+        : props.color
+            ? lighten(0.1, props.color)
+            : '#fff'};
+        color: ${props => props.filled
+            ? '#222'
+            : props.color
+                ? lighten(0.1, props.color)
+                : '#fff'};
+        background: ${props => props.filled
+            ? props.color
+                ? lighten(0.1, props.color)
+                : '#ccc'
+            : '#222' };;
     }
 `;
 
@@ -329,7 +360,7 @@ class App extends React.Component {
         if (this.state.highlightedCasters.length !== 0) {
 
             return (
-                <StyledButton onClick={() => this.setState({highlightedCasters: []})} label='Show all' />
+                <StyledButton onClick={() => this.setState({highlightedCasters: []})} label='Reset' />
             );
         }
     }
@@ -349,10 +380,16 @@ class App extends React.Component {
                             The Spells of D&D 5e
                         </h1>
                         <h3>
-                            {this.state.highlightedCasters.length === 0 ? 'Click on a spell to highlight its casters ' : 'Spells known by '}{this.renderTitleCasterLabels()}{this.renderEditUi()}
+                            {this.renderEditUi()}
                         </h3>
                         <div>
-                            {casters.map(caster => <StyledButton key={caster} label={caster} onClick={() => this.handleHighlightClick(caster)} />)}
+                            <HighlightLabel>Highlight</HighlightLabel>
+                            {casters.map(caster => <StyledButton
+                                key={caster}
+                                label={caster}
+                                color={color[caster]}
+                                filled={this.state.highlightedCasters.includes(caster)}
+                                onClick={() => this.handleHighlightClick(caster)} />)}
                             {this.renderResetButton()}
                         </div>
                     </Header>
