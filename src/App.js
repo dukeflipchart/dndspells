@@ -390,7 +390,6 @@ class App extends React.Component {
                                 color={color[caster]}
                                 filled={this.state.highlightedCasters.includes(caster)}
                                 onClick={() => this.handleHighlightClick(caster)} />)}
-                            {this.renderResetButton()}
                         </div>
                     </Header>
                     <BoardWrapper>
