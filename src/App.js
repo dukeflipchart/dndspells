@@ -33,6 +33,12 @@ const EditModeMessage = styled.div`
     }
 `;
 
+const CopyrightMessage = styled.p`
+    color: #666;
+    column-span: all;
+    font-size: 0.75em;
+`;
+
 const HighlightLabel = styled.span`
     margin-right: 0.5em;
     color: #aaa;
@@ -219,9 +225,12 @@ const Aside = styled.aside`
 
     p {
         font-family: 'Merriweather', serif;
-        font-size: 1em;
         line-height: 1.7;
         margin: 0 auto 1em;
+    }
+
+    ${CopyrightMessage} {
+        margin-top: 2em;
     }
 
     img {
@@ -424,6 +433,9 @@ class App extends React.Component {
                                 <img src={avatar} />
                             </a>
                         </Logo>
+                        <CopyrightMessage>
+                            This is unofficial, fan-created work. I am not affiliated with Wizards of the Coast in any way. Dungeons & Dragons, D&D, their respective logos, and all Wizards titles and characters are property of Wizards of the Coast LLC in the U.S.A. and other countries.
+                        </CopyrightMessage>
                     </Aside>
                 </Wrapper>
             </>
