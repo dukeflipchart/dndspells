@@ -4,6 +4,17 @@ import { color, Spell, StyledSpell, CasterLabel } from './spell';
 import Spells from './spells';
 import avatar from './taurus2.jpg';
 
+const casters = [
+    'bard',
+    'cleric',
+    'druid',
+    'paladin',
+    'ranger',
+    'sorcerer',
+    'warlock',
+    'wizard'
+]
+
 const EditModeMessage = styled.div`
     background-color: ${color.paladin};
     display: flex;
@@ -20,41 +31,28 @@ const EditModeMessage = styled.div`
     }
 `;
 
-function SaveButton(props) {
+function Button(props) {
 
-    return <a className={props.className} href="#" onClick={() => props.onClick()}>Save</a>;
+    return <button className={props.className} href="#" onClick={() => props.onClick()}>{props.label}</button>
 }
 
-const StyledSaveButton = styled(SaveButton)`
-    color: #222;
-    display: block;
-    margin-left: 0;
-    padding: 0.5em 1em;
-    border: 1px solid #222;
-    border-radius: 0.75em;
+const StyledButton = styled(Button)`
+    border: 0;
+    border-radius: 0.75rem;
+    background: #222;
+    color: ${color.wizard};
+    font-family: 'Lato', sans-serif;
+    font-size: 1rem;
+    line-height: 1.3;
+    white-space: nowrap;
     text-decoration: none;
+    padding: 0.25rem 0.5rem;
+    margin: 0.25rem;
+    cursor: pointer;
 
     :hover {
         color: ${color.paladin};
         background-color: #222;
-    }
-`;
-
-const ResetButton = styled.a`
-    flex: 0 1 auto;
-    margin-left: 1em;
-    border-radius: 0.75em;
-
-    @media only screen and (min-width: 1920px) {
-        display: block;
-        margin-left: 0;
-        padding: 0.5em 1em;
-        border: 1px solid ${color.wizard};
-        text-decoration: none;
-
-        :hover {
-            border: 1px solid ${color.warlock};
-        }
     }
 `;
 
@@ -226,7 +224,7 @@ class App extends React.Component {
             'spells': [],
             'selectedId': false,
             'highlightedCasters': [],
-            'editMode': false,
+            'editMode': true,
             'timeSinceLastSave': 0
         };
 
@@ -275,6 +273,16 @@ class App extends React.Component {
         link.click();
     }
 
+    handleHighlightClick(caster) {
+        if (this.state.highlightedCasters.includes(caster)) {
+            this.setState({highlightedCasters: this.state.highlightedCasters.filter(hcaster => hcaster !== caster)});
+        } else {
+            var newCasters = this.state.highlightedCasters;
+            newCasters.push(caster);
+            this.setState({highlightedCasters: newCasters});
+        }
+    }
+
     handleClick(i) {
         if (this.state.editMode) {
             if (this.state.selectedId === i) {
@@ -292,11 +300,11 @@ class App extends React.Component {
                 //console.log('selected: ' + i);
             }
         } else {
-            if (this.state.highlightedCasters === this.state.spells[i].casters) {
+            /*if (this.state.highlightedCasters === this.state.spells[i].casters) {
                 this.setState({highlightedCasters: []});
             } else {
                 this.setState({highlightedCasters: this.state.spells[i].casters});
-            }
+            }*/
         }
     }
 
@@ -305,39 +313,16 @@ class App extends React.Component {
         return casters.filter(value => this.state.highlightedCasters.includes(value));
     }
 
-    renderSpells() {
-
-        return this.state.spells.map(i => <Spell
-            key={i.id}
-            id={i.id}
-            name={i.name}
-            casters={i.casters}
-            additionalCasters={i.additionalCasters}
-            additionalCastersShown={ this.state.highlightedCasters.length === 0 ? i.additionalCasters : []}
-            level={i.level}
-            selected={this.state.selectedId === i.id ? true : false}
-            hasOpacity={this.state.highlightedCasters.length === 0}
-            highlightColors={this.getHighlightColors(i.casters)}
-            coordinates={i.coordinates}
-            onClick={() => this.handleClick(i.id)}
-        />);
-    }
-
     renderButtons() {
         if (this.state.editMode) {
 
             return (
                 <EditModeMessage>
                     <p>EDIT MODE, AUTOSAVING</p>
-                    <StyledSaveButton onClick={() => this.handleSave(this.state.spells)} />
+                    <StyledButton onClick={() => this.handleSave(this.state.spells)} label='Save'/>
                 </EditModeMessage>
             );
         }
-    }
-
-    renderTitleCasterLabels() {
-
-        return this.state.highlightedCasters.map(caster => <CasterLabel key={caster} caster={caster}>{caster}</CasterLabel>);
     }
 
     renderResetButton() {
@@ -345,10 +330,15 @@ class App extends React.Component {
 
             return (
                 <ResetButtonWrapper>
-                    <ResetButton onClick={() => this.setState({highlightedCasters: []})} href='#'>Show all</ResetButton>
+                    <StyledButton onClick={() => this.setState({highlightedCasters: []})} label='Show all' />
                 </ResetButtonWrapper>
             );
         }
+    }
+
+    renderTitleCasterLabels() {
+
+        return this.state.highlightedCasters.map(caster => <CasterLabel key={caster} caster={caster}>{caster}</CasterLabel>);
     }
 
     render() {
@@ -361,12 +351,28 @@ class App extends React.Component {
                             The Spells of D&D 5e
                         </h1>
                         <h3>
-                            {this.state.highlightedCasters.length === 0 ? 'Click on a spell to highlight its casters 🡢 ' : 'Spells known by '}{this.renderTitleCasterLabels()}{this.renderResetButton()}{this.renderButtons()}
+                            {this.state.highlightedCasters.length === 0 ? 'Click on a spell to highlight its casters ' : 'Spells known by '}{this.renderTitleCasterLabels()}{this.renderResetButton()}{this.renderButtons()}
                         </h3>
+                        <div>
+                            {casters.map(caster => <StyledButton key={caster} label={caster} onClick={() => this.handleHighlightClick(caster)} />)}
+                        </div>
                     </Header>
                     <BoardWrapper>
                         <Board>
-                            {this.renderSpells()}
+                            {this.state.spells.map(i => <Spell
+                                key={i.id}
+                                id={i.id}
+                                name={i.name}
+                                casters={i.casters}
+                                additionalCasters={i.additionalCasters}
+                                additionalCastersShown={ this.state.highlightedCasters.length === 0 ? i.additionalCasters : []}
+                                level={i.level}
+                                selected={this.state.selectedId === i.id ? true : false}
+                                hasOpacity={this.state.highlightedCasters.length === 0}
+                                highlightColors={this.getHighlightColors(i.casters)}
+                                coordinates={i.coordinates}
+                                onClick={() => this.handleClick(i.id)}
+                            />)}
                         </Board>
                     </BoardWrapper>
                     <Aside>
