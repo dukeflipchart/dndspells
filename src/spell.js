@@ -93,7 +93,7 @@ const StyledSpellTooltip = styled(SpellTooltip)`
     display: block;
     position: absolute;
     min-width: 10em;
-    top: 110%;
+    top: 115%;
     left: 50%;
     transform: translateX(-50%) translateY(10px);
     background-color: #111;
