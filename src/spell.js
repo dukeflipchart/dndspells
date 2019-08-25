@@ -13,7 +13,7 @@ export const color = {
 }
 
 function gradientize(casters) {
-    let gradient = 'conic-gradient(';
+    let gradient = '';
     let position = 0;
     let step = 100/casters.length;
     for (let caster of casters) {
@@ -22,7 +22,6 @@ function gradientize(casters) {
         }
         gradient += color[caster] + ' ' + position + '% ' + (position += step) + '%';
     }
-    gradient += ')';
     return gradient;
 }
 
@@ -167,7 +166,9 @@ export class Spell extends React.Component {
 
 export const StyledSpell = styled.div.attrs({
     style: props => ({
-        background: props.highlightColors.length ? gradientize(props.highlightColors) : gradientize(props.casters),
+        background: props.highlightColors.length
+            ? 'conic-gradient(' + gradientize(props.highlightColors) + ')'
+            : 'conic-gradient(' + gradientize(props.casters) + ')',
         gridColumnStart: props.coordinates[0],
         gridRowStart: props.coordinates[1]
     })

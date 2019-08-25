@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { lighten } from 'polished';
 
-import { color, Spell, StyledSpell, CasterLabel } from './spell';
+import { color, Spell, CasterLabel } from './spell';
 import Spells from './spells';
 import avatar from './taurus2.jpg';
 
