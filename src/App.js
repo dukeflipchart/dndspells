@@ -19,18 +19,34 @@ const casters = [
 
 const EditModeMessage = styled.div`
     background-color: ${color.paladin};
+    color: #222;
     display: flex;
     flex-direction: column;
     align-items: center;
     border-radius: 0.75em;
     font-family: 'Lato', sans-serif;
     padding: 1em;
-    margin-top: 1em;
+    margin: 1em 0;
 
     p {
         color: #222;
         margin: 0 0 1em 0;
     }
+`;
+
+const ConicGradientMessage = styled.div`
+    @supports (background: conic-gradient(rgb(76, 136, 255) 0%, rgb(76, 136, 255) 100%)) {
+        display: none;
+    }
+    background-color: ${color.paladin};
+    color: #222;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 0.75em;
+    font-family: 'Lato', sans-serif;
+    padding: 1em;
+    margin: 1em 0;
 `;
 
 const CopyrightMessage = styled.p`
@@ -389,6 +405,7 @@ class App extends React.Component {
                             The Spells of D&D 5e
                         </h1>
                         <h3>
+                            <ConicGradientMessage>Oh dang, it seems like your browser doesn't support conic gradients. This thing looks better with them. If you happen to have the latest Chrome or Safari, check this out in those instead!</ConicGradientMessage>
                             {this.renderEditUi()}
                         </h3>
                         <div>

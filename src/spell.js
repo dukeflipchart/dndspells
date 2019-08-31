@@ -159,10 +159,34 @@ export class Spell extends React.Component {
                 {this.renderAdditionalCasters(this.props.additionalCastersShown)}
                 <SpellLevel></SpellLevel>
                 <StyledSpellTooltip name={this.props.name} level={this.props.level} casters={this.props.casters} additionalCasters={this.props.additionalCasters} selected={this.props.selected} />
+                <StyledSpellFallback {...this.props} />
             </StyledSpell>
         );
     }
 }
+
+const StyledSpellFallback = styled.div.attrs({
+    style: props => ({
+        background: props.highlightColors.length
+            ? 'linear-gradient(' + gradientize(props.highlightColors) + ')'
+            : 'linear-gradient(' + gradientize(props.casters) + ')'
+    })
+})`
+    @supports (background: conic-gradient(rgb(76, 136, 255) 0%, rgb(76, 136, 255) 100%)) {
+        display: none;
+    }
+
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    border-radius: 100%;
+    ${props => (props.hasOpacity || props.highlightColors.length || props.selected) ? '' : 'opacity: 0.25;'}
+    transition: box-shadow 0.2s, opacity 0.2s;
+    cursor: pointer;
+    z-index: -2;
+`;
 
 export const StyledSpell = styled.div.attrs({
     style: props => ({
