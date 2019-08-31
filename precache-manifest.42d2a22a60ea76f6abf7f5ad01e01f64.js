@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "521fcce3377e3d501f265854aff900ae",
+    "revision": "aaf57dcc8cd0f7b38bde96caaa563c12",
     "url": "/dndspells/index.html"
   },
   {
-    "revision": "d1882ac3a1662bed04f8",
+    "revision": "0eef1faa5056d733bb0e",
     "url": "/dndspells/static/css/main.c832eda0.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/dndspells/static/js/2.f73db241.chunk.js"
   },
   {
-    "revision": "d1882ac3a1662bed04f8",
-    "url": "/dndspells/static/js/main.4658b912.chunk.js"
+    "revision": "0eef1faa5056d733bb0e",
+    "url": "/dndspells/static/js/main.53de7dcc.chunk.js"
   },
   {
     "revision": "31b3d73b7134e406b28c",
