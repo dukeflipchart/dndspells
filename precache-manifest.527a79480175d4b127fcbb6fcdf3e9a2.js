@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "86f80e4bd708e3d0c818142b0523e2b1",
+    "revision": "521fcce3377e3d501f265854aff900ae",
     "url": "/dndspells/index.html"
   },
   {
