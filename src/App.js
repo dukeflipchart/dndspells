@@ -122,12 +122,6 @@ function swap(spells, i1, i2) {
 
 const ResetButtonWrapper = styled.div`
     display: inline;
-
-    @media only screen and (min-width: 1920px) {
-        display: flex;
-        justify-content: center;
-        margin-top: 1em;
-    }
 `;
 
 const Wrapper = styled.div`
@@ -136,29 +130,15 @@ const Wrapper = styled.div`
     @media screen and (min-width: 601px) {
         font-size: 16px;
     }
-
-    @media screen and (min-width: 1920px) {
-        display: flex;
-        height: 100%;
-        align-items: center;
-    }
 `;
 
 const Header = styled.header`
     padding: 1.5em 1.5em 1em;
     text-align: center;
 
-    @media screen and (min-width: 1920px) {
-        flex: 1 1 20%;
-    }
-
     h1 {
         font-size: 2em;
         margin: 0;
-
-        @media screen and (min-width: 1920px) {
-            font-size: 5em;
-        }
     }
 
     h3 {
@@ -185,18 +165,14 @@ const Header = styled.header`
 `;
 
 const BoardWrapper = styled.div`
-    @media screen and (min-aspect-ratio: 4/3) and (max-aspect-ratio: 3/2) {
-        max-width: 55%;
-        margin: 0 auto;
+    margin: 0 auto;
+
+    @media only screen and (orientation: portrait) {
+        max-width: 95vw;
     }
 
-    @media screen and (min-aspect-ratio: 3/2) and (max-width: 1919px) {
-        max-width: 45%;
-        margin: 0 auto;
-    }
-
-    @media screen and (min-width: 1920px) {
-        flex: 1 1 50%;
+    @media only screen and (orientation: landscape) {
+        max-width: 85vh;
     }
 `;
 
@@ -206,9 +182,8 @@ const Board = styled.div`
     grid-gap: 0.25em;
     margin: 0.5em;
 
-    @media screen and (min-width: 1920px) {
-        grid-gap: 0.75vh;
-        margin: 1.5vh;
+    @media only screen and (min-width: 1920px) {
+        grid-gap: 0.25vw;
     }
 `;
 
@@ -222,14 +197,6 @@ const Aside = styled.aside`
     @media only screen and (min-width: 600px) {
         columns: 2 10em;
         column-gap: 1.5em;
-    }
-
-    @media screen and (min-width: 1920px) {
-        flex: 1 1 20%;
-    }
-
-    @media screen and (min-width: 2560px) {
-
     }
 
     h2 {

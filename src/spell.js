@@ -6,7 +6,7 @@ export const color = {
     cleric: '#EB4747',
     druid: '#60DF20',
     paladin: '#F5D63D',
-    ranger: '#2EB82E',
+    ranger: '#2EA02E',
     sorcerer: '#F2800D',
     warlock: '#A852FF',
     wizard: '#4C88FF'
